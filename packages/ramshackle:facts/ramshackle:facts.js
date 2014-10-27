@@ -3,6 +3,7 @@
 Units = new Mongo.Collection("units");
 Measures = new Mongo.Collection("measures");
 Entities = new Mongo.Collection("entities");
+Types = new Mongo.Collection("types");
 Predicates = new Mongo.Collection("predicates");
 Sources = new Mongo.Collection("sources");
 Facts = new Mongo.Collection("facts");
@@ -23,6 +24,19 @@ Schemas.Measure = new SimpleSchema({
     units: { type: [ Schemas.Unit ] }
 });
 Measures.attachSchema(Schemas.Measure);
+
+Schemas.Type = new SimpleSchema({
+    name: { type: String, label: "Name" }, //the canonical name
+    description: { type: String, label: "Description" }, //the description
+    uri: { type: String, optional: true }, //the RDF URI
+    ns: { type: String, optional: true }, //the RDF namespace
+    local: { type: String, optional: true }, //the RDF local name
+    created: { type: Date, defaultValue: new Date() },
+    updated: { type: Date, optional: true },
+    deleted: { type: Date, optional: true },
+    creator: { type: String }
+});
+Types.attachSchema(Schemas.Type);
 
 Schemas.Entity = new SimpleSchema({
     name: { type: String, label: "Name" }, //the canonical name
