@@ -11,18 +11,33 @@ Template.formEntityInsert.events({'submit form': function (event, template) {
     _name = template.find("input[name=name]");
     _description = template.find("input[name=description]");
 
-    // Do form validation
-
     var ent = {
         name: _name.value,
         description: _description.value,
         creator: Meteor.user()._id
     };
 
+    var validationError = false;
+
+//    if (! Entities.simpleSchema().namedContext().validateOne(ent, "name")) {
+//        Session.set("error-readlbio-entity-name", "Please enter a name");
+//        validationError = true;
+//    } else {
+//        Session.set("error-readlbio-entity-name"
+//    }
+
+    if (! Entities.simpleSchema().namedContext().validateOne(ent, "description")) {
+        Session.set("error-readlbio-entity-name", "Please enter a name");
+        validationError = true;
+    }
+
+    if (validationError) return;
 
     Entities.insert(ent, function (err) {
         if (err) {
-            console.log("Error inserting entity: " + err)
+            console.log("Error inserting entity: " + err);
+            Session.set("error-readlbio-entity", "Unable to insert. Please fix your input.");
+            validationError = true;
         }
     });
 
@@ -38,6 +53,12 @@ Template.formEntityInsert.events({'submit form': function (event, template) {
 Template.listEntities.helpers({
     entities: function(){
         return Entities.find().fetch();
+    }
+});
+
+Template.listEntities.events({
+    'click': function(){
+        alert(this.description);
     }
 });
 

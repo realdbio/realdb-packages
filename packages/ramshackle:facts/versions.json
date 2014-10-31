@@ -97,6 +97,10 @@
       "1.0.6"
     ],
     [
+      "nooitaf:semantic-ui",
+      "0.0.1"
+    ],
+    [
       "observe-sequence",
       "1.0.3"
     ],

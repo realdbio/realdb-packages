@@ -9,12 +9,33 @@
 
 <template name="listEntities">
     {{#each entities}}
-    <div class="row">
-        <div class="span2">{{_id}}</div>
-        <div class="span2">{{name}}</div>
-        <div class="span2">{{description}}</div>
-        <div class="span2"><button name="edit">Edit</button> </div>
-    </div>
+    <p>
+        {{> entityItem}}
+    </p>
     {{/each}}
 </template>
 
+<template name="entityItem">
+    <!--<p class="editable" data-type="text" data-placeholder="Entity Name" data-emptytext="Click to enter text" data-rows="1">{{name}}</p>-->
+    <!--<button href="#" onclick="{{popupEditEntity}}" title="{{description}}">{{name}}</button>-->
+    <!--<div class="row">-->
+        <!--&lt;!&ndash;<div class="span2">{{_id}}</div>&ndash;&gt;-->
+        <!--<div class="span2">{{name}}</div>-->
+        <!--<div class="span2">{{description}}</div>-->
+        <!--<div class="span2"><button name="edit">Edit</button> </div>-->
+    <!--</div>-->
+
+    <div class="small blue ui labeled icon buttons">
+        <div class="ui button">
+            <i class="doc basic icon"></i>
+            {{name}}
+        </div>
+    </div>
+    <div class="small blue ui icon buttons">
+        <div class="ui button">
+            <i class="info icon"></i>
+            &nbsp;
+        </div>
+        <!--</div>-->
+    </div>
+</template>
