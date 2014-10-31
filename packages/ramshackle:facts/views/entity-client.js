@@ -56,9 +56,25 @@ Template.listEntities.helpers({
     }
 });
 
+Template.listEntities.rendered = function(){
+    if (!this.rendered) {
+        //initialize popup
+        $('.realdb-btn-entity-info').popup();
+        this.rendered = true;
+    }
+};
+
+
+
 Template.listEntities.events({
-    'click': function(){
-        alert(this.description);
+    'click .realdb-btn-entity-info': function(event){
+//        console.log(event.target);
+//        event.target.popup();
+        event.currentTarget.popup({
+            title: this.name,
+            content: this.description,
+            on: 'focus'
+        });
     }
 });
 
