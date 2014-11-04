@@ -44,9 +44,13 @@ Template.formEntityInsert.events({'submit form': function (event, template) {
 }});
 
 
-//Template.listMyEntities.helpers({
-//    listMyEntities: function(){
-//        return Entities.find({creator: Meteor.user()._id});
+
+//Template.listEntities.helpers({
+//    entities: function(){
+//        var es = Entities.find().fetch();
+//        console.log("Found " + es.length + " entities");
+//        if (es && es.length > 0) es[es.length-1].isLast = true;
+//        return es;
 //    }
 //});
 
@@ -56,25 +60,58 @@ Template.listEntities.helpers({
     }
 });
 
-Template.listEntities.rendered = function(){
-    if (!this.rendered) {
-        //initialize popup
-        $('.realdb-btn-entity-info').popup();
-        this.rendered = true;
-    }
+//Template.listEntities.rendered = function(){
+//    //initialize popup
+////    $('.realdb-btn-entity-info').popup();
+////    console.log("initialized");
+//
+////    var queue = $('.realdb-btn-entity-info');
+////        console.log("Initializing " + queue.length + " entities");
+////        for (var i in queue) {
+////            var item = queue[i];
+////            console.log('init item ' + i + ': ' + item);
+////            $(item).popup();
+////        }
+//};
+
+//Template.listEntities.events({
+//    'click .realdb-btn-entity-info': function(event, template){
+//        var infoItemSelector = "#realdb-btn-entity-info-" + this._id;
+//        console.log('this=' + this);
+//        console.log('popping up: title=' + this.name + '; content=' + this.description);
+////        template.$(event.currentTarget).popup({
+//
+//        $(infoItemSelector).popup(
+//            {
+////            title: this.name,
+////            content: this.description,
+//            on: 'click'
+//        }
+//        );
+//
+////        template.$(event.currentTarget).popup({
+////            title: this.name,
+////            content: this.description,
+////            on: 'click'
+////        });
+//
+////        $(event.currentTarget).popup({
+////            title: this.name,
+////            content: this.description,
+////            on: 'click'
+////        });
+//
+////        $(event.currentTarget).popup({
+////            title: "test",
+////            content: "descr",
+////            on: 'click'
+////        });
+//    }
+//});
+//
+Template.entityItem.rendered = function() {
+    var infoItemSelector = "#realdb-btn-entity-info-" + this.data._id;
+    console.log(infoItemSelector);
+    $(infoItemSelector).popover();
 };
-
-
-
-Template.listEntities.events({
-    'click .realdb-btn-entity-info': function(event){
-//        console.log(event.target);
-//        event.target.popup();
-        event.currentTarget.popup({
-            title: this.name,
-            content: this.description,
-            on: 'focus'
-        });
-    }
-});
 

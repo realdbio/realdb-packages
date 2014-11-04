@@ -13,7 +13,7 @@ Package.onUse(function(api) {
   );
 
     api.use(
-        ['templating', 'nooitaf:semantic-ui'],
+        ['templating', 'nemo64:bootstrap', 'less'],
         ['client']
     );
 

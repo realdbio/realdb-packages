@@ -1,6 +1,6 @@
 if (Meteor.isClient) {
   // counter starts at 0
-  Session.setDefault("counter", 0);
+//  Session.setDefault("counter", 0);
 
 //  Template.hello.helpers({
 //    counter: function () {
@@ -20,4 +20,18 @@ if (Meteor.isServer) {
   Meteor.startup(function () {
     // code to run on server at startup
   });
+
 }
+
+
+Router.map(function()
+{
+    this.route('/',
+        {
+            action: function()
+            {
+                if (this.ready())
+                    this.render();
+            }
+        });
+});

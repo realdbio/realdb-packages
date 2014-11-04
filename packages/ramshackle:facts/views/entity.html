@@ -7,35 +7,58 @@
 </template>
 
 
+<!--<template name="listEntities">-->
+    <!--<div class="ui list">-->
+        <!--{{#each entities}}-->
+            <!--<div class="item">-->
+                <!--<p>-->
+                    <!--{{> entityItem}}-->
+                <!--</p>-->
+            <!--</div>-->
+        <!--{{/each}}-->
+    <!--</div>-->
+<!--</template>-->
+
+<!--<template name="entityItem">-->
+    <!--<div class="small blue ui labeled icon buttons">-->
+        <!--<div class="ui button realdb-btn-entity">-->
+            <!--<i class="doc basic icon"></i>-->
+            <!--{{name}}-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="small blue ui icon buttons">-->
+        <!--<div id="realdb-btn-entity-info-{{_id}}" class="circular ui button realdb-btn-entity-info" data-content="{{description}}">-->
+            <!--<i class="info icon"></i>-->
+            <!--&nbsp;-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="ui icon buttons">-->
+        <!--<div class="small ui button realdb-btn-entity-plus">-->
+            <!--<i class="plus icon"></i>-->
+            <!--&nbsp;-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</template>-->
+
 <template name="listEntities">
-    <div class="ui list">
+    <div class="list">
         {{#each entities}}
-            <div class="item">
-                <p>
-                    {{> entityItem}}
-                </p>
-            </div>
+        <div class="item">
+            <p>
+                {{> entityItem}}
+            </p>
+        </div>
         {{/each}}
     </div>
 </template>
 
 <template name="entityItem">
-    <div class="small blue ui labeled icon buttons">
-        <div class="ui button realdb-btn-entity">
-            <i class="doc basic icon"></i>
-            {{name}}
-        </div>
-    </div>
-    <div class="small blue ui icon buttons">
-        <div class="circular ui button realdb-btn-entity-info">
-            <i class="info icon"></i>
-            &nbsp;
-        </div>
-    </div>
-    <div class="ui icon buttons">
-        <div class="small ui button realdb-btn-entity-plus">
-            <i class="plus icon"></i>
-            &nbsp;
-        </div>
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary">
+            <span class="glyphicon glyphicon-book"></span> {{name}}
+        </button>
+        <button type="button" id="realdb-btn-entity-info-{{_id}}" class="btn btn-primary" data-container="body" data-toggle="popover" title="{{name}}" data-content="{{description}}">
+            <span class="glyphicon glyphicon-info-sign"></span>
+        </button>
     </div>
 </template>
