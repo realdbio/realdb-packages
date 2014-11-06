@@ -33,32 +33,38 @@ Template.formEntityInsert.events({'submit form': function (event, template) {
 
     if (validationError) return;
 
-    Entities.insert(ent, function (err) {
-        if (err) {
-            console.log("Error inserting entity: " + err);
-            Session.set("error-readlbio-entity", "Unable to insert. Please fix your input.");
-            validationError = true;
-        }
+//    Entities.insert(ent, function (err) {
+//        if (err) {
+//            console.log("Error inserting entity: " + err);
+//            Session.set("error-readlbio-entity", "Unable to insert. Please fix your input.");
+//            validationError = true;
+//        }
+//    });
+
+    Meteor.call("addEntity", ent, function(error, result) {
+        // display the error to the user and abort
+        if (error)
+            return alert(error.reason);
+        console.log("addEntity returns: " + result);
     });
 
 }});
-
-
-
-//Template.listEntities.helpers({
-//    entities: function(){
-//        var es = Entities.find().fetch();
-//        console.log("Found " + es.length + " entities");
-//        if (es && es.length > 0) es[es.length-1].isLast = true;
-//        return es;
-//    }
-//});
 
 Template.listEntities.helpers({
     entities: function(){
         return Entities.find().fetch();
     }
 });
+
+
+Template.entityItem.rendered = function() {
+    var infoItemSelector = "#realdb-btn-entity-info-" + this.data._id;
+    console.log(infoItemSelector);
+    $(infoItemSelector).popover();
+};
+
+
+
 
 //Template.listEntities.rendered = function(){
 //    //initialize popup
@@ -109,9 +115,15 @@ Template.listEntities.helpers({
 //    }
 //});
 //
-Template.entityItem.rendered = function() {
-    var infoItemSelector = "#realdb-btn-entity-info-" + this.data._id;
-    console.log(infoItemSelector);
-    $(infoItemSelector).popover();
-};
 
+
+
+
+//Template.listEntities.helpers({
+//    entities: function(){
+//        var es = Entities.find().fetch();
+//        console.log("Found " + es.length + " entities");
+//        if (es && es.length > 0) es[es.length-1].isLast = true;
+//        return es;
+//    }
+//});

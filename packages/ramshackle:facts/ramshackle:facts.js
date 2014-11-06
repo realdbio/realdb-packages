@@ -29,7 +29,7 @@ Measures.attachSchema(Schemas.Measure);
 
 Schemas.Type = new SimpleSchema({
     name: { type: String, label: "Name" }, //the canonical name
-    description: { type: String, label: "Description" }, //the description
+    description: { type: String, label: "Description", optional: true }, //the description
     uri: { type: String, optional: true }, //the RDF URI
     ns: { type: String, optional: true }, //the RDF namespace
     local: { type: String, optional: true }, //the RDF local name
@@ -42,7 +42,7 @@ Types.attachSchema(Schemas.Type);
 
 Schemas.Entity = new SimpleSchema({
     name: { type: String, label: "Name" }, //the canonical name
-    description: { type: String, label: "Description" }, //the description
+    description: { type: String, label: "Description", optional: true }, //the description
     uri: { type: String, optional: true }, //the RDF URI
     ns: { type: String, optional: true }, //the RDF namespace
     local: { type: String, optional: true }, //the RDF local name
@@ -153,3 +153,6 @@ Schemas.List = new SimpleSchema({
     version: { type: Number } //the version number
 });
 Lists.attachSchema(Schemas.List);
+
+
+Entities.initEasySearch(['name', 'description']);

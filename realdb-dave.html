@@ -4,19 +4,24 @@
 
 <body>
 <div class="container">
+
+    <div class="jumbotron">
+
   <h1>Dev Realdb functions</h1>
   {{> loginButtons align="right"}}
-</div>
 
-  <div class="container">
-      <h2>Entities</h2>
+        <h2>Search for Entities</h2>
+        {{> entitySearchBox}}
+
+      <h2>All Entities</h2>
       {{> listEntities}}
-  </div>
 
-  <div class="container">
+
       <h2>Create Entity</h2>
       {{> formEntityInsert }}
-  </div>
 
+    </div>
+
+</div>
 </body>
 
