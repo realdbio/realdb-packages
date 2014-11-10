@@ -13,23 +13,33 @@ Package.onUse(function(api) {
   );
 
     api.use(
-        ['templating', 'nemo64:bootstrap', 'less'],
+        ['templating', 'mizzao:bootstrap-3', 'less'],
         ['client']
     );
 
 
     api.addFiles(
-        ['ramshackle:facts.js', 'methods.js'],
+        ['lib/schema.js', 'lib/init.js', 'lib/methods.js'],
         ['client', 'server']
     );
 
     api.addFiles(
-        ['views/entity.html', 'views/entity-client.js'],
+        [
+            'client/init-client.js',
+            'client/entity.html',
+            'client/entity.js',
+            'client/type.html',
+            'client/type.js',
+            'client/dataloader.html',
+            'client/dataloader.js'],
         ['client']
     );
 
     api.addFiles(
-        ['views/entity-server.js'],
+        [
+            'server/init-server.js',
+            'server/entity-server.js'
+        ],
         ['server']
     );
 
@@ -44,7 +54,9 @@ Package.onUse(function(api) {
 
 Package.onTest(function(api) {
   api.use('tinytest');
+  api.use('aldeed:simple-schema');
   api.use('aldeed:collection2');
   api.use('ramshackle:facts');
-  api.addFiles('ramshackle:facts-tests.js');
+  api.use('matteodem:easy-search');
+  api.addFiles('test/ramshackle:facts-tests.js');
 });

@@ -137,6 +137,10 @@
       "1.0.5"
     ],
     [
+      "mizzao:bootstrap-3",
+      "3.2.0-2"
+    ],
+    [
       "mobile-status-bar",
       "1.0.1"
     ],
@@ -147,14 +151,6 @@
     [
       "mongo-livedata",
       "1.0.6"
-    ],
-    [
-      "nemo64:bootstrap",
-      "3.2.3"
-    ],
-    [
-      "nemo64:bootstrap-data",
-      "3.2.0-rc2"
     ],
     [
       "observe-sequence",

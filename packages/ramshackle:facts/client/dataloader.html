@@ -1,0 +1,71 @@
+<!--<template name="dataImportButton">-->
+    <!--<button type="button" data-toggle="modal" data-target="#dataImportModal">New List</button>-->
+
+    <!--<div id="dataImportModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">-->
+        <!--<div class="modal-dialog modal-lg">-->
+            <!--<div class="modal-content">-->
+                <!--Here is the modal content-->
+            <!--</div>-->
+
+            <!--<div class="modal-footer">-->
+                <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
+                <!--<button type="button" class="btn btn-primary">Done</button>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+
+<!--</template>-->
+
+<template name="dataLoader">
+    <div class="row-fluid">
+        <div class="col-sm-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">1. Paste your data below</h3>
+                </div>
+                <div class="panel-body">
+                    <ul>
+                        <li>Copy your data as Tab-Separated Values (<b>TSV</b>): For most spreadsheet programs, just highlight the data and <b>Ctrl-C</b> or <b>Command-C</b>.</li>
+                        <li>Include your headers in the first row.</li>
+                        <li>Paste the data below.</li>
+                    </ul>
+                    {{> tsvTextArea }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row-fluid">
+        <div class="col-sm-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">2. What types of "thing" are you loading?</h3>
+                </div>
+                <div class="panel-body">
+                    {{> typeChooserCreator }}
+                </div>
+            </div>
+        </div>
+        <!--<div class="col-sm-3">-->
+            <!--<span class="glyphicon glyphicon-ok"></span>-->
+        <!--</div>-->
+    </div>
+</template>
+
+
+<template name="tsvTextArea">
+    <form role="tsvTextAreaForm">
+        <div class="form-group">
+            <textarea class="form-control" rows="4"></textarea>
+        </div>
+    </form>
+</template>
+
+<template name="typeChooserCreator">
+    {{> esInput index="types" placeholder="Search..." }}
+    {{#esEach index="types"}}
+    <div class="item">
+        {{> typeButton}}
+    </div>
+    {{/esEach}}
+</template>

@@ -155,4 +155,3 @@ Schemas.List = new SimpleSchema({
 Lists.attachSchema(Schemas.List);
 
 
-Entities.initEasySearch(['name', 'description']);

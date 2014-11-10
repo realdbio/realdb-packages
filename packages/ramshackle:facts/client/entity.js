@@ -1,56 +1,33 @@
 
-Meteor.subscribe("entities");
+Meteor.subscribe("myEntities");
 
 Template.formEntityInsert.events({'submit form': function (event, template) {
     event.preventDefault();
-
     if (Meteor.user() == null || Meteor.user()._id == null) {
         return;
     }
-
     _name = template.find("input[name=name]");
     _description = template.find("input[name=description]");
-
     var ent = {
         name: _name.value,
         description: _description.value,
         creator: Meteor.user()._id
     };
-
     var validationError = false;
-
-//    if (! Entities.simpleSchema().namedContext().validateOne(ent, "name")) {
-//        Session.set("error-readlbio-entity-name", "Please enter a name");
-//        validationError = true;
-//    } else {
-//        Session.set("error-readlbio-entity-name"
-//    }
-
     if (! Entities.simpleSchema().namedContext().validateOne(ent, "description")) {
         Session.set("error-readlbio-entity-name", "Please enter a name");
         validationError = true;
     }
-
     if (validationError) return;
-
-//    Entities.insert(ent, function (err) {
-//        if (err) {
-//            console.log("Error inserting entity: " + err);
-//            Session.set("error-readlbio-entity", "Unable to insert. Please fix your input.");
-//            validationError = true;
-//        }
-//    });
-
     Meteor.call("addEntity", ent, function(error, result) {
         // display the error to the user and abort
         if (error)
             return alert(error.reason);
         console.log("addEntity returns: " + result);
     });
-
 }});
 
-Template.listEntities.helpers({
+Template.listMyEntities.helpers({
     entities: function(){
         return Entities.find().fetch();
     }

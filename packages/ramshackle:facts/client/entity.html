@@ -40,7 +40,7 @@
     <!--</div>-->
 <!--</template>-->
 
-<template name="listEntities">
+<template name="listMyEntities">
     <div class="list">
         {{#each entities}}
         <div class="item">
@@ -54,9 +54,7 @@
 
 <template name="entityItem">
     <div class="btn-group-sm">
-        <button type="button" class="btn-sm btn-primary">
-            <span class="glyphicon glyphicon-book"></span> {{name}}
-        </button>
+        {{> entityButton}}
         <button type="button" id="realdb-btn-entity-info-{{_id}}" class="btn-sm btn-default" data-container="body" data-toggle="popover" title="{{name}}" data-content="{{description}}">
             <span class="glyphicon glyphicon-info-sign"></span>
         </button>
@@ -75,6 +73,12 @@
             <li><a href="#">Separated link</a></li>
         </ul>
     </div>
+</template>
+
+<template name="entityButton">
+    <button type="button" class="btn-sm btn-primary realdb-entity-btn">
+        <span class="glyphicon glyphicon-book"></span> {{name}}
+    </button>
 </template>
 
 <template name="entitySearchBox">
