@@ -23,7 +23,7 @@ Template.formEntityInsert.events({'submit form': function (event, template) {
         // display the error to the user and abort
         if (error)
             return alert(error.reason);
-        console.log("addEntity returns: " + result);
+//        console.log("addEntity returns: " + result);
     });
 }});
 
@@ -36,7 +36,7 @@ Template.listMyEntities.helpers({
 
 Template.entityItem.rendered = function() {
     var infoItemSelector = "#realdb-btn-entity-info-" + this.data._id;
-    console.log(infoItemSelector);
+//    console.log(infoItemSelector);
     $(infoItemSelector).popover();
 };
 

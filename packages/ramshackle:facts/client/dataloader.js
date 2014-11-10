@@ -21,3 +21,26 @@ Template.tsvTextArea.events({'change keyup': function (event, template) {
 //    });
 
 }});
+
+typeSearchBoxUserQuery = "";
+
+Template.typeChooserCreator.created = function () {
+    var instance = EasySearch.getComponentInstance(
+        { id: 'typeChooser', index: 'types' }
+    );
+
+//    instance.on('searchingDone', function (searchingIsDone) {
+//        console.log('I am done!');
+//    });
+
+    instance.on('currentValue', function (val) {
+        console.log('The user searches for ' + val);
+        typeSearchBoxUserQuery = val;
+    });
+};
+
+Template.typeChooserCreator.helpers({
+    newTypeName: function() {
+        return typeSearchBoxUserQuery;
+    }
+});

@@ -30,3 +30,4 @@ Template.listMyTypes.helpers({
         return Types.find().fetch();
     }
 });
+
