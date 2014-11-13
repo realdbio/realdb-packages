@@ -6,3 +6,6 @@
 Meteor.subscribe('myEntities');
 Meteor.subscribe('myTypes');
 
+Handlebars.registerHelper('session',function(input){
+    return Session.get(input);
+});

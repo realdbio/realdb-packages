@@ -53,14 +53,14 @@
 </template>
 
 <template name="typeButton">
-    <button type="button" class="btn-sm btn-primary realdb-type-btn">
-        <span class="glyphicon glyphicon-book"></span> {{name}}
+    <button type="button" class="btn-sm {{ typeButtonClass }} realdb-type-btn" id="{{_id}}">
+        <span class="glyphicon glyphicon-{{icon}} glyphicon-align-left"></span> {{name}}
     </button>
 </template>
 
 <template name="typeItem">
     <div class="btn-group-sm">
-        {{> typeButton}}
+        {{> typeButton icon='book' name=name _id=_id}}
         <button type="button" id="realdb-btn-type-info-{{_id}}" class="btn-sm btn-default" data-container="body" data-toggle="popover" title="{{name}}" data-content="{{description}}">
             <span class="glyphicon glyphicon-info-sign"></span>
         </button>

@@ -31,3 +31,11 @@ Template.listMyTypes.helpers({
     }
 });
 
+//Template.typeButton.helpers({
+//    getIconForType: function(event) {
+//        console.log("getIconForType: selectedTypeId=" + selectedTypeId);
+//        if (selectedTypeId == "typeButton-" + this._id) return "checked";
+//        return "unchecked"
+//    }
+//});
+
