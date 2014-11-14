@@ -15,6 +15,15 @@ Template.tsvTextArea.events({'keyup': function (event, template) {
 //    console.log("textarea=" + textarea.value);
 
     Session.set("tsvTextAreaContents", textarea.value);
+    var headerRow = textarea.value.split('\n')[0];
+    var delim = ",";
+    //if a semicolon is in the first row then it is the delim
+    if (headerRow.indexOf(";") >= 0) delim = ";";
+    //if a tab is in the first row then it is the delim
+    if (headerRow.indexOf("\t") >= 0) delim = "\t";
+    Session.set("tsvDelimiter", delim);
+    var headers = headerRow.split(delim);
+    Session.set("tsvHeaders", headers);
 //    Meteor.call("addEntity", ent, function(error, result) {
 //        // display the error to the user and abort
 //        if (error)
@@ -82,4 +91,11 @@ Template.typeChooserCreator.events({
         Session.set("selectedTypeId", newId);
 //        console.log('click .realdb-type-btn: Session.selectedTypeId=' + Session.get("selectedTypeId"));
     }
+});
+
+
+Template.columnMapper.helpers({
+   columns: function() {
+       return Session.get()
+   }
 });
