@@ -30,7 +30,7 @@
                         <li>Include column headers in the first row.</li>
                         <li>Paste the data below.</li>
                     </ul>
-                    {{> tsvTextArea }}
+                    {{> dataTextArea }}
                 </div>
             </div>
         </div>
@@ -66,18 +66,18 @@
 </template>
 
 
-<template name="tsvTextArea">
+<template name="dataTextArea">
     <div class="container">
     <div class="row">
         <div class="col-md-11">
-            <form role="tsvTextAreaForm">
+            <form role="dataTextAreaForm">
                 <div class="form-group">
                     <textarea class="form-control" rows="4"></textarea>
                 </div>
             </form>
         </div>
         <div class="col-md-1">
-            {{> dataloaderOKButton sessionVariable="tsvTextAreaContents" }}
+            {{> dataloaderOKButton sessionVariable="dataTextAreaContents" }}
         </div>
     </div>
     </div>
@@ -129,10 +129,10 @@
 
 
 <template name="columnMapper">
-    {{#each session "tsvHeaders"}}
+    {{#each session "dataColumns"}}
         <div class="row">
-            <div class="col-md-4">
-                {{this}}
+            <div class="col-md-1">
+                {{header}}
             </div>
             <div class="col-md-4">
                 <!--<div class="dropdown">-->
@@ -154,11 +154,11 @@
                 <div class="form-group">
                     <form role="form" class="form-inline">
                         <select class="form-control">
-                            <option value="name">contains the Name or Title of the {{session "selectedTypeName"}}</option>
-                            <option value="description">contains a Description</option>
-                            <option value="synonym">contains a Synonym for the name</option>
-                            <option value="datum">contains a Value about the  {{session "selectedTypeName"}}</option>
-                            <option value="ignore">Ignore this column</option>
+                            <option value="title" {{ isSelected "title" }}>the Title</option>
+                            <option value="description" {{ isSelected "description" }}>a Description</option>
+                            <option value="synonym" {{ isSelected "synonym" }}>a Synonym</option>
+                            <option value="datum" {{ isSelected "datum" }}>a Value</option>
+                            <option value="ignore" {{ isSelected "ignore" }}>Ignore this column</option>
                         </select>
                     </form>
                 </div>
@@ -176,10 +176,6 @@
                         <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>-->
                     <!--</ul>-->
                 <!--</div>-->
-
-
-
-
 
             </div>
         </div>
