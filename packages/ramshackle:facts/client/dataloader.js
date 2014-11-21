@@ -140,3 +140,69 @@ Template.columnMapper.events({
         Session.set("dataColumns", cols);
     }
 });
+
+
+Template.datePickers.rendered = function() {
+    $('.datetimepicker').datetimepicker({
+        format: 'YYYY-MM-DD HH:MM:SS'
+    })
+
+//        .on('changeDate', function(ev){
+//            console.log("Date changed!: " + ev);
+//        });
+};
+
+Template.datePickers.events({
+    "change": function(event) {
+        var changedElementId = event.currentTarget.id;
+        console.log("CCCCCCC Changed: " + changedElementId);
+
+        if ("startDate" == changedElementId) {
+            var val = $('#startDate').data("DateTimePicker").getDate();
+            Session.set("startDate", new Date(val));
+            console.log("Session." + changedElementId + "=" + val);
+        }
+
+        if ("endDate" == changedElementId) {
+            var val = $('#endDate').data("DateTimePicker").getDate();
+            Session.set("endDate", new Date(val));
+            console.log("Session." + changedElementId + "=" + val);
+        }
+
+        var val = event.currentTarget.checked;
+
+        if ("beginningOfTime" == changedElementId) {
+            Session.set("beginningOfTime", val);
+            if (val) {
+                $('#startDate').data("DateTimePicker").disable();
+            } else {
+                $('#startDate').data("DateTimePicker").enable();
+            }
+            console.log("Session." + changedElementId + "=" + val);
+        }
+
+        if ("eternity" == changedElementId) {
+            Session.set("eternity", val);
+            if (val) {
+                $('#endDate').data("DateTimePicker").disable();
+            } else {
+                $('#endDate').data("DateTimePicker").enable();
+            }
+            console.log("Session." + changedElementId + "=" + val);
+        }
+
+        console.log("bt=" + Session.get("beginningOfTime"));
+        console.log("sd=" + Session.get("startDate"));
+        console.log("et=" + Session.get("eternity"));
+        console.log("ed=" + Session.get("endDate"));
+        var startDateSpecified = Session.get("beginningOfTime") || Session.get("startDate");
+        var endDateSpecified = Session.get("eternity") || Session.get("endDate");
+        Session.set("datesSpecified", startDateSpecified && endDateSpecified);
+    }
+
+//    "changeDate": function(event) {
+//        var changedElementId = event.currentTarget.id;
+//        console.log("Date changed: " + changedElementId);
+//        console.log(changedElementId + "=" + event.date);
+//    }
+});

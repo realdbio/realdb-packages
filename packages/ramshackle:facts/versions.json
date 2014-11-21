@@ -213,6 +213,10 @@
       "1.0.3"
     ],
     [
+      "tsega:bootstrap3-datetimepicker",
+      "0.4.0"
+    ],
+    [
       "ui",
       "1.0.4"
     ],

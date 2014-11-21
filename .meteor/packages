@@ -12,3 +12,5 @@ accounts-google
 templating
 iron:router
 matteodem:easy-search
+tsega:bootstrap3-datetimepicker
+

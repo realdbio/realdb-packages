@@ -13,7 +13,7 @@ Package.onUse(function(api) {
   );
 
     api.use(
-        ['templating', 'mizzao:bootstrap-3', 'less'],
+        ['templating', 'mizzao:bootstrap-3', 'less', 'tsega:bootstrap3-datetimepicker'],
         ['client']
     );
 
