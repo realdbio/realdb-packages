@@ -1,6 +1,20 @@
 /**
  * Created by dd on 11/7/14.
  */
+Template.dataLoader.helpers({
+    importButtonClass: function() {
+        if (Session.get("selectedTypeId")
+            && Session.get("dataTextAreaContents")
+//            && Session.get("dataColumns")
+            && Session.get("datesSpecified") ) {
+            console.log("NOT disabled");
+            return "btn-success";
+        }
+        console.log("DISABLED");
+        return "btn-default disabled";
+    }
+});
+
 Template.dataTextArea.events({'keyup': function (event, template) {
     console.log("dataTextArea change keyup");
     event.preventDefault();
