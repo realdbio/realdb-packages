@@ -19,7 +19,11 @@ Package.onUse(function(api) {
 
 
     api.addFiles(
-        ['lib/schema.js', 'lib/init.js', 'lib/methods.js'],
+        ['lib/schema.js',
+            'lib/init.js',
+            'lib/util.js',
+            'lib/methods.js',
+            'lib/RealdbioImporter.js'],
         ['client', 'server']
     );
 

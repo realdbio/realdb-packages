@@ -82,6 +82,7 @@ Sources.attachSchema(Schemas.Source);
 
 Schemas.Fact = new SimpleSchema({
     subj: { type: Schemas.Entity }, //the subject
+    header: { type: String }, //the header before mapping to a predicate id
     pred: { type: Schemas.Predicate } , //the predicate
     obj: { type: Schemas.Entity, optional: true }, //the object
     type: { type: Schemas.Type, optional: true }, //the type of entity

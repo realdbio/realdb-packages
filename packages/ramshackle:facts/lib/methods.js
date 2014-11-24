@@ -21,6 +21,10 @@ Meteor.methods({
         type.creator = Meteor.userId();
 
         Types.insert(type);
+    },
+
+    bulkLoad: function(data) {
+        console.log("Bulk Loading data: " + JSON.stringify(data));
     }
 
 
