@@ -41,8 +41,7 @@ Package.onUse(function(api) {
 
     api.addFiles(
         [
-            'server/init-server.js',
-            'server/entity-server.js'
+            'server/init-server.js'
         ],
         ['server']
     );

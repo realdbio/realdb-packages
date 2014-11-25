@@ -1,6 +1,11 @@
 /**
  * Created by dd on 11/7/14.
  */
+
+//subscribe to reactive sources
+Meteor.subscribe("entityQueue");
+Meteor.subscribe("factQueue");
+
 Template.dataLoader.helpers({
     importButtonClass: function() {
         if (Session.get("entityTypeId")
@@ -240,4 +245,11 @@ Template.datePickers.events({
 //        console.log("Date changed: " + changedElementId);
 //        console.log(changedElementId + "=" + event.date);
 //    }
+});
+
+
+Template.dataQueue.helpers({
+    dataQueueItems: function() {
+        return [{title: "Item #1"}, {title: "Another item"}];
+    }
 });

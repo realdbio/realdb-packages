@@ -27,39 +27,43 @@ RealdbioImporter.prototype.import = function(data) {
         var cells = line.split(self.config.delimiter);
         if (!cells || cells.length == 0) continue;
 
-        for (var ci in cells) {
-            var colType = self.config.dataColumns[ci].colType;
-            var header = self.config.dataColumns[ci].header;
-            if (colType=="ignore") continue;
-            var cell = cells[ci];
-            if (!cell) continue;
-            var entity = entities[ci];
-            if (! facts[ci]) facts[ci] = [];
-//            var theFacts = facts[ci];
+        var entity = entities[li];
+        if (! entity) {
+            entity = {
+                _id: new Meteor.Collection.ObjectID(),
+                type: typeObj._id
+            };
+            entities.push(entity);
 
-            if (! entity) {
-                entity = {
-                    _id: new Meteor.Collection.ObjectID(),
-                    type: typeObj._id
-                };
-                entities.push(entity);
-
-                //if facts already exist for this row, then update them with the new id
+            //if facts already exist for this row, then update them with the new id
 //                if (theFacts) {
 //                    for (var fi in theFacts) {
 //                        var fact = theFacts[fi];
 //                        fact.subj = entity._id
 //                    }
 //                }
-            }
+        }
+
+        for (var ci in cells) {
+            var colType = self.config.dataColumns[ci].colType;
+            var header = self.config.dataColumns[ci].header;
+            if (colType=="ignore") continue;
+            var cell = cells[ci];
+            if (!cell) continue;
+
+            if (! facts[ci]) facts[ci] = [];
+//            var theFacts = facts[ci];
+
 
             if (colType=="title") {
                 entity.title = cell;
+                entities[li] = entity;
             } else if (colType=="description" || colType=="synonym") {
                 var description = entity.description || "";
                 if (description && description.length > 0) description += "; ";
                 description += cell;
                 entity.description = description;
+                entities[li] = entity;
             } else if (colType=="datum") {
                 var numericVal = null;
                 if(isNumber(cell)) {
@@ -74,7 +78,6 @@ RealdbioImporter.prototype.import = function(data) {
                 };
                 facts[ci].push(fact);
             }
-            entities[ci] = entity;
         }
     }
 
@@ -85,7 +88,7 @@ RealdbioImporter.prototype.import = function(data) {
         strategies: [self.config]
     };
 
-    console.log("bulkData=" + bulkData);
+    console.log("bulkData=" + JSON.stringify(bulkData, "  "));
     //store entities and facts
     Meteor.call("bulkLoad", bulkData, function(error, result) {
         // display the error to the user and abort

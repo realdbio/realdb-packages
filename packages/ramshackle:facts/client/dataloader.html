@@ -61,17 +61,23 @@
 
     <div class="row">
         <div class="col-md-12 text-center">
-            <!--<div class="panel panel-info">-->
-                <!--<div class="panel-heading">-->
-                    <!--<h3 class="panel-title">1. Paste your data below</h3>-->
-                <!--</div>-->
                 <div class="center-block">
                     <a href="#" class="btn btn-lg {{importButtonClass}}" role="button" id="importButton">Import</a>
                 </div>
-            <!--</div>-->
         </div>
+    </div>
 
-
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Clarify Your Data</h3>
+                </div>
+                <div class="panel-body">
+                    {{> dataQueue }}
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -206,61 +212,13 @@
                 {{> dataloaderOKButton sessionVariable="datesSpecified" }}
             </div>
         </div>
-
-        <!--<div class="row">-->
-            <!--<div class="col-md-2">-->
-                <!--<input type="radio" name="datePickerOption" value="fromTo"> From-->
-            <!--</div>-->
-            <!--<div class="col-md-4">-->
-                <!--<div class="input-group datetimepicker">-->
-                    <!--<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>-->
-                    <!--<input class="set-due-date form-control" type="text"/>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="col-md-1">-->
-                <!--to-->
-            <!--</div>-->
-            <!--<div class="col-md-4">-->
-                <!--<div class="input-group datetimepicker">-->
-                    <!--<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>-->
-                    <!--<input class="set-due-date form-control" type="text"/>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-        <!--<div class="row">-->
-            <!--<div class="col-md-2">-->
-                <!--<input type="radio" name="datePickerOption" value="everAfter"> From-->
-            <!--</div>-->
-            <!--<div class="col-md-4">-->
-                <!--<div class="input-group datetimepicker">-->
-                    <!--<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>-->
-                    <!--<input class="set-due-date form-control" type="text"/>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="col-md-1">-->
-                <!--to-->
-            <!--</div>-->
-            <!--<div class="col-md-4">-->
-                <!--eternity-->
-            <!--</div>-->
-        <!--</div>-->
-        <!--<div class="row">-->
-            <!--<div class="col-md-2">-->
-                <!--<input type="radio" name="datePickerOption" value="upTo"> From-->
-            <!--</div>-->
-            <!--<div class="col-md-4">-->
-                <!--the beginning of time-->
-            <!--</div>-->
-            <!--<div class="col-md-1">-->
-                <!--to-->
-            <!--</div>-->
-            <!--<div class="col-md-4">-->
-                <!--<div class="input-group datetimepicker">-->
-                    <!--<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>-->
-                    <!--<input class="set-due-date form-control" type="text"/>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-
     </div>
+</template>
+
+
+
+<template name="dataQueue">
+    {{#each dataQueueItems }}
+    {{ title }}
+    {{/each}}
 </template>
