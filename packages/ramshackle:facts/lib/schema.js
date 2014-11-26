@@ -9,6 +9,8 @@ Sources = new Mongo.Collection("sources");
 Facts = new Mongo.Collection("facts");
 Votes = new Mongo.Collection("votes");
 Lists = new Mongo.Collection("lists");
+Mappings = new Mongo.Collection("mappings");
+Strategies = new Mongo.Collection("strategies");
 //Items = new Mongo.Collection("items");
 
 var Schemas = {};
@@ -160,4 +162,32 @@ Schemas.List = new SimpleSchema({
 });
 Lists.attachSchema(Schemas.List);
 
+Schemas.Mapping = new SimpleSchema({
+    mapType: { type: String, allowedValues: ['Type', 'Entity', 'Predicate'], index: 1 }, //the type: TRUE, FALSE, GOOD, BAD, ...
+    text: { type: String, index: 1 }, //the text value that is mapped
+    textLC: { type: String, index: 1 }, //lower case of the text value that is mapped
+    type: { type: Schemas.Type, optional: true }, //the type this maps to
+    entity: { type: Schemas.Entity, optional: true }, //the entity this maps to
+    pred: { type: Schemas.Predicate, optional: true }, //the predicate this maps to
+    created: { type: Date, defaultValue: new Date() },
+    updated: { type: Date, optional: true },
+    deleted: { type: Date, optional: true },
+    used: { type: Date, optional: true }, //date last used
+    useCount: { type: Number, index: -1 }, //number of times this mapping has been used
+    creator: { type: String, index: 1 }
+});
+Mappings.attachSchema(Schemas.Mapping);
 
+Schemas.Strategy = new SimpleSchema({
+    headers: { type: String, index: 1 }, //the header line
+    headersLC: { type: String, index: 1 }, //header line converted to lower case
+    headerMappings: { type: Object, optional: true }, //key=header lower case, value=Mapping object
+    rowMappings: { type: Object, optional: true }, //lower case of the text value that is mapped
+    created: { type: Date, defaultValue: new Date() },
+    updated: { type: Date, optional: true },
+    deleted: { type: Date, optional: true },
+    used: { type: Date, optional: true }, //date last used
+    useCount: { type: Number, index: -1 }, //number of times this strategy has been used
+    creator: { type: String, index: 1 }
+});
+Strategies.attachSchema(Schemas.Strategy);

@@ -59,6 +59,10 @@ Meteor.methods({
             obj.validity = 0;
             Facts.insert(obj);
         }
+    },
+
+    lookupMappings: function(info) {
+
     }
 
 

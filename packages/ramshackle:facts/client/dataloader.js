@@ -59,19 +59,37 @@ Template.dataTextArea.events({'keyup': function (event, template) {
     if (headerRow.indexOf(";") >= 0) delim = ";";
     //if a tab is in the first row then it is the delim
     if (headerRow.indexOf("\t") >= 0) delim = "\t";
-    Session.set("dataDelimiter", delim);
+    Session.set("delimiter", delim);
     var headers = headerRow.split(delim);
-
     var cols = [];
     var existingCols = Session.get("dataColumns");
     var headerStr = "";
     var headerStrLC = "";
+    var headers = [];
+    var headersLC = [];
     for (var headerIndex in headers) {
         var headerVal = headers[headerIndex].trim();
         if (headerStr.length > 0) headerStr += delim;
         headerStr += headerVal;
         if (headerStrLC.length > 0) headerStrLC += "~|~";
         headerStrLC += headerVal.toLowerCase();
+        headers.push(headerStr);
+        headersLC.push(headerStrLC);
+    }
+
+    Session.set("dataHeaders", headerStr);
+    Session.set("dataHeadersLC", headerStrLC);
+
+    var importInfo = {
+        headerStr: headerStr,
+        headerStrLC: headerStrLC,
+        headers: headers,
+        headersLC: headersLC
+    };
+
+    //look up any mappings
+    Meteor.call("lookupMappings", importInfo, function(error, result) {
+
         var colType;
         if (existingCols) colType = existingCols.colType;
 
@@ -84,19 +102,15 @@ Template.dataTextArea.events({'keyup': function (event, template) {
         }
 //        Session.set("colType_" + headerIndex, colType);
         var headerObj = {
-            colIndex: headerIndex,
             header: headerVal,
             colType: colType
         };
-//        headerObj[colType] = true;
-//        console.log("headerObj=" + headerObj);
-//        cols[headerVal] = headerObj;
         cols.push(headerObj);
-    }
-    Session.set("dataHeaders", headerStr);
-    Session.set("dataHeadersLC", headerStrLC);
-    Session.set("dataColumns", cols);
-    Session.set("delimiter", delim);
+
+        Session.set("dataColumns", cols);
+
+    });
+
 //    Meteor.call("addEntity", ent, function(error, result) {
 //        // display the error to the user and abort
 //        if (error)
