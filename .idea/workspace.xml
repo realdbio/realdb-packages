@@ -63,10 +63,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="schema.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="schema.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/packages/ramshackle:facts/lib/schema.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.43396226" vertical-offset="2334" max-vertical-offset="2985">
+            <state vertical-scroll-proportion="0.0" vertical-offset="2334" max-vertical-offset="2985">
               <caret line="174" column="58" selection-start-line="174" selection-start-column="58" selection-end-line="174" selection-end-column="58" />
               <folding />
             </state>
@@ -96,8 +96,8 @@
       <file leaf-file-name="dataloader.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/packages/ramshackle:facts/client/dataloader.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-13.0" vertical-offset="142" max-vertical-offset="4110">
-              <caret line="32" column="42" selection-start-line="22" selection-start-column="11" selection-end-line="32" selection-end-column="42" />
+            <state vertical-scroll-proportion="-14.730769" vertical-offset="142" max-vertical-offset="4110">
+              <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -115,11 +115,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="methods.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="methods.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/packages/ramshackle:facts/lib/methods.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="341" max-vertical-offset="1110">
-              <caret line="64" column="0" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.6764253" vertical-offset="461" max-vertical-offset="1125">
+              <caret line="60" column="9" selection-start-line="60" selection-start-column="9" selection-end-line="60" selection-end-column="9" />
               <folding />
             </state>
           </provider>
@@ -171,8 +171,8 @@
         <option value="$PROJECT_DIR$/packages/ramshackle:facts/server/init-server.js" />
         <option value="$PROJECT_DIR$/packages/ramshackle:facts/client/dataloader.html" />
         <option value="$PROJECT_DIR$/packages/ramshackle:facts/client/dataloader.js" />
-        <option value="$PROJECT_DIR$/packages/ramshackle:facts/lib/methods.js" />
         <option value="$PROJECT_DIR$/packages/ramshackle:facts/lib/schema.js" />
+        <option value="$PROJECT_DIR$/packages/ramshackle:facts/lib/methods.js" />
       </list>
     </option>
   </component>
@@ -710,22 +710,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/packages/ramshackle:facts/lib/methods.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="341" max-vertical-offset="1110">
-          <caret line="64" column="0" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/packages/ramshackle:facts/client/dataloader.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-13.0" vertical-offset="142" max-vertical-offset="4110">
-          <caret line="32" column="42" selection-start-line="22" selection-start-column="11" selection-end-line="32" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/packages/ramshackle:facts/lib/RealdbioImporter.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-10.115385" vertical-offset="907" max-vertical-offset="1530">
@@ -738,8 +722,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/packages/ramshackle:facts/lib/schema.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.43396226" vertical-offset="2334" max-vertical-offset="2985">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2334" max-vertical-offset="2985">
           <caret line="174" column="58" selection-start-line="174" selection-start-column="58" selection-end-line="174" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/packages/ramshackle:facts/client/dataloader.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-14.730769" vertical-offset="142" max-vertical-offset="4110">
+          <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/packages/ramshackle:facts/lib/methods.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6764253" vertical-offset="461" max-vertical-offset="1125">
+          <caret line="60" column="9" selection-start-line="60" selection-start-column="9" selection-end-line="60" selection-end-column="9" />
           <folding />
         </state>
       </provider>
