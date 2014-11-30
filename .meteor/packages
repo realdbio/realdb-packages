@@ -13,4 +13,6 @@ templating
 iron:router
 matteodem:easy-search
 tsega:bootstrap3-datetimepicker
+peerlibrary:async
+sergeyt:typeahead
 

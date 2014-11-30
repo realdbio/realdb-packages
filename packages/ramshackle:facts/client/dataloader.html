@@ -1,15 +1,33 @@
 <template name="dataLoader">
+
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <h3 class="panel-title">1. Paste your data below</h3>
+                    <h3 class="panel-title">1. What types of "thing" are you loading?</h3>
                 </div>
                 <div class="panel-body">
                     <ul>
-                        <li>Each row represents a different thing (city, leader, star, species, exhibit, athlete, ...)</li>
+                        <li>Each row in your spreadsheet will be a different one of these things.</li>
+                    </ul>
+                    {{> typeChooserCreator }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">2. Paste your data below</h3>
+                </div>
+                <div class="panel-body">
+                    <ul>
+                        <li>Each row represents a different thing (city, leader, galaxy, species, athlete, ...)</li>
                         <li>Copy your data as Comma-Separated (<b>CSV</b>) or Tab-Separated (<b>TSV</b>) or Semicolon-delimited values: For most spreadsheet programs, just highlight the data and <b>Ctrl-C</b> or <b>Command-C</b>.</li>
                         <li>Include column headers in the first row.</li>
+                        <li>The first column contains the name or identifier (Vienna, Mahatma Gandhi, Andromeda, H. habilis, Jesse Owens, ...)</li>
                         <li>Paste the data below.</li>
                     </ul>
                     {{> dataTextArea }}
@@ -18,19 +36,6 @@
         </div>
 
 
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h3 class="panel-title">2. What types of "thing" are you loading?</h3>
-                </div>
-                <div class="panel-body">
-                    {{> typeChooserCreator }}
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="row">
@@ -147,32 +152,41 @@
 <template name="columnMapper">
     {{#each session "dataColumns"}}
         <div class="row">
-            <div class="col-md-1">
-                {{header}}
+            <div class="col-md-2">
+                {{text}}
             </div>
-            <div class="col-md-10">
 
-                <div class="form-group">
-                    <form role="form" class="form-inline">
-                        <select class="form-control">
-                            <option value="title" {{ isSelected "title" }}>the Name</option>
-                            <option value="description" {{ isSelected "description" }}>a Description</option>
-                            <option value="synonym" {{ isSelected "synonym" }}>a Synonym</option>
-                            <option value="datum" {{ isSelected "datum" }}>a Value</option>
-                            <option value="ignore" {{ isSelected "ignore" }}>Ignore this column</option>
-                        </select>
-                    </form>
+            <div class="col-md-3">
+                {{predName}}
+            </div>
+
+            <div class="col-md-3">
+                <div class="{{isVisible}}">
+                    {{> esInput index="predicates" placeholder="Search..." class="realdbio-columnMapper-predSearch" id=predColId}}
                 </div>
-
+            </div>
+            <div class="col-md-3">
+                {{#ifEsHasNoResults index="predicates" }}
+                <div class="no-results">Create new property:
+                    <button type="button" class="btn-sm {{ predButtonClass }} realdb-pred-btn" id="newPred">
+                        <span class="glyphicon glyphicon-{{ getIconForPred }}"></span> {{newPredName}}
+                    </button>
+                </div>
+                {{/ifEsHasNoResults}}
             </div>
 
             <div class="col-md-1">
-                {{> dataloaderOKButton sessionVariable="dataColumns" }}
+                {{> dataloaderOKButton sessionVariable="predMappings" }}
             </div>
         </div>
     {{/each}}
 </template>
 
+
+<!--<template name="pred-item">-->
+    <!--<p class="repo-name">{{name}}</p>-->
+    <!--<p class="repo-description">{{description}}</p>-->
+<!--</template>-->
 
 
 <template name="datePickers">

@@ -161,6 +161,10 @@
       "1.0.1"
     ],
     [
+      "peerlibrary:async",
+      "0.9.0_3"
+    ],
+    [
       "random",
       "1.0.1"
     ],
@@ -183,6 +187,10 @@
     [
       "routepolicy",
       "1.0.2"
+    ],
+    [
+      "sergeyt:typeahead",
+      "0.10.5_7"
     ],
     [
       "service-configuration",

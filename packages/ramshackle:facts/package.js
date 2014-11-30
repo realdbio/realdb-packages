@@ -8,7 +8,7 @@ Package.describe({
 Package.onUse(function(api) {
   api.versionsFrom('0.9.4');
   api.use(
-      ['mongo', 'aldeed:collection2', 'accounts-base', 'matteodem:easy-search'],
+      ['mongo', 'aldeed:collection2', 'accounts-base', 'matteodem:easy-search', 'peerlibrary:async', 'sergeyt:typeahead'],
       ['client', 'server']
   );
 

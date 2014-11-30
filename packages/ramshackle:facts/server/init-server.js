@@ -29,3 +29,13 @@ Meteor.publish("predicateQueue", function () {
     if (! this.userId) return;
     return Predicates.find({ creator: this.userId, validity: {$lte: 0} });
 });
+
+lookupMapping = function(info, callback) {
+    Mappings.find({textLC: info.textLC, mapType: info.mapType}, function(err, result) {
+        if (err) {
+            console.log("Error in lookupMapping: " + err);
+            callback(err);
+        }
+        callback(null, result);
+    });
+};

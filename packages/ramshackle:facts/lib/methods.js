@@ -61,10 +61,47 @@ Meteor.methods({
         }
     },
 
-    lookupMappings: function(info) {
-        //first see if we have matching strategy
+    lookupStrategy: function(info) {
+        //first see if we have matching Strategy.  If found, return it
+        Strategies.find({headersLC: info.headersLC}, function(err, response) {
+            if (err) {
+                console.log("lookupMappings error: " + err);
+            } else {
+                console.log("Found strategies: " + JSON.stringify(response));
+                if (response.data) {
+                    var payload = {
+                        strategies: response.data
+                    };
+                    return payload;
+                }
+            }
+
+            var strategy = {
+                headerMappings: {}
+            };
+            //Mapping not found:, build a Strategy.
+
+            // Find any matching Mappings
+            var q = async.queue(lookupMapping, 5);
+            //this will execute when finished
+            q.drain = function() {
+                console.log('all items have been processed');
+                var payload = {
+                    strategies: [strategy]
+                };
+                return payload;
+            };
+
+            //start the queue with all headers
+            q.push(info.headers, function(err, mapping) {
+                if (err) {
+                    console.log("lookupMappings error: " + err);
+                }
+                strategy.headerMappings[mapping.name] = mapping.values;
+            });
+        });
 
     }
-
-
 });
+
+

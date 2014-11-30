@@ -61,26 +61,41 @@ Template.dataTextArea.events({'keyup': function (event, template) {
     if (headerRow.indexOf("\t") >= 0) delim = "\t";
     Session.set("delimiter", delim);
     var headers = headerRow.split(delim);
+    console.log("headers=" + headers);
     var cols = [];
-    var existingCols = Session.get("dataColumns");
+//    var existingCols = Session.get("dataColumns");
     var headerStr = "";
     var headerStrLC = "";
-    var headers = [];
     var headersLC = [];
-    for (var headerIndex in headers) {
-        var headerVal = headers[headerIndex].trim();
+    var ci = 0;
+    for (var hi in headers) {
+        if (hi==0) continue;
+        var headerVal = headers[hi].trim();
+        var headerLCVal = headerVal.toLowerCase();
         if (headerStr.length > 0) headerStr += delim;
         headerStr += headerVal;
         if (headerStrLC.length > 0) headerStrLC += "~|~";
-        headerStrLC += headerVal.toLowerCase();
-        headers.push(headerStr);
+        headerStrLC += headerLCVal;
         headersLC.push(headerStrLC);
+
+        var mapping = {
+            predIndex: ci,
+            predColId: "predCol-" + ci,
+            text: headerVal,
+            textLC: headerLCVal
+        };
+        cols.push(mapping);
+        ci++;
     }
 
     Session.set("dataHeaders", headerStr);
     Session.set("dataHeadersLC", headerStrLC);
+    Session.set("dataColumns", cols);
+//    console.log("cols=" + JSON.stringify(cols));
 
+    if (! Session.get("entityTypeId") || Session.get("entityTypeId")=="newType") return;
     var importInfo = {
+        type: Session.get("entityTypeId"),
         headerStr: headerStr,
         headerStrLC: headerStrLC,
         headers: headers,
@@ -88,34 +103,24 @@ Template.dataTextArea.events({'keyup': function (event, template) {
     };
 
     //look up any mappings
-    Meteor.call("lookupMappings", importInfo, function(error, result) {
-
-        var colType;
-        if (existingCols) colType = existingCols.colType;
-
-        if (! colType) {
-            if (headerIndex == 0) {
-                colType = "title";
-            } else {
-                colType = "datum";
-            }
-        }
-//        Session.set("colType_" + headerIndex, colType);
-        var headerObj = {
-            header: headerVal,
-            colType: colType
-        };
-        cols.push(headerObj);
-
-        Session.set("dataColumns", cols);
-
-    });
-
-//    Meteor.call("addEntity", ent, function(error, result) {
-//        // display the error to the user and abort
-//        if (error)
-//            return alert(error.reason);
-//        console.log("addEntity returns: " + result);
+//    Meteor.call("lookupStrategy", importInfo, function(error, result) {
+//        if (error) {
+//            console.log("error trying to call lookupMappings: " + error);
+//            return;
+//        }
+//
+//        if (result.strategies && result.strategies.length > 0) {
+//            var strategy = result.strategies[0];
+//            Session.set("importStrategy", strategy);
+//        }
+//
+//        for (var ci in cols) {
+//            var headerLC = cols[hi].textLC;
+//
+//            cols[hi].pred = strategy.rowMappings[headerLC];
+//        }
+//        Session.set("dataColumns", cols);
+//
 //    });
 
 }});
@@ -165,7 +170,6 @@ Template.typeChooserCreator.helpers({
         } else {
             return "hidden";
         }
-
     }
 });
 
@@ -175,33 +179,73 @@ Template.typeChooserCreator.events({
         this.icon="check";
 //        console.log('click .realdb-type-btn: entityTypeId=' + Session.get("entityTypeId"));
         var newId = this._id;
-        if (!newId) newId = 'newType';
+        if (!newId) {
+            newId = 'newType';
+            //TODO filter by type?
+//            EasySearch.changeProperty('predicates', 'filterByTypes', null);
+        } else {
+//            EasySearch.changeProperty('predicates', 'filterByTypes', newId);
+        }
         var newName = this.name;
         if (!newName) newName = typeSearchBoxUserQuery;
         Session.set("entityTypeId", newId);
         Session.set("entityTypeName", newName);
+
+        //set EasySearch to filter by this type
+
+
 //        console.log('click .realdb-type-btn: Session.entityTypeId=' + Session.get("entityTypeId"));
     }
 });
 
+var predSearchInstances = [];
+var predSearchIndex = 0;
+Template.columnMapper.created = function () {
+    var instance = EasySearch.getComponentInstance(
+        { index : 'predicates' }
+    );
+//    instance.predSearchIndex = predSearchIndex;
+//    predSearchInstances[predSearchIndex] = instance;
+    instance.on('searchingDone', function (searchingIsDone) {
+        searchingIsDone && console.log('I am done searching!');
+    });
+
+    instance.on('currentValue', function (val) {
+
+        console.log('The user searches for ' + val + '; index#=' + predSearchIndex);
+        var cols = Session.get("dataColumns");
+//        console.log("change #realdbio-columnMapper-predSearch: cols[" + this.predIndex + "]=" + cols[this.predIndex]);
+//        this.newPredName = event.currentTarget.value;
+    });
+};
+
 Template.columnMapper.helpers({
-   isSelected: function(colType) {
-//       console.log("colType=" + colType + "; this.colType=" + this.colType);
-       if (colType == this.colType) return "selected";
-       return "";
-   }
+    isVisible: function() {
+        if (this.predIndex == predSearchIndex) {
+            return "";
+        } else {
+//            return "hidden";
+            return "";
+        }
+    }
 });
 
 Template.columnMapper.events({
-    'change': function(event) {
-//        console.log("this.header=" + this.header);
-//        this.colType = event.currentTarget.value;
-//        Session.set("colType_" + this.colIndex, event.currentTarget.value);
-//        console.log("set colType_" + this.colIndex + " to " + Session.get("colType_" + this.colIndex));
-        var cols = Session.get("dataColumns");
-        cols[this.colIndex].colType = event.currentTarget.value;
-        Session.set("dataColumns", cols);
+//    'currentValue': function(event, template) {
+//        console.log('change predSearchInstance #' + this.predIndex);
+//    }
+
+    'keyup': function(event, template) {
+        var elementId = event.currentTarget.id;
+        var predIndex = -1;
+        if (elementId.indexOf("predCol-")==0) {
+            predIndex = elementId.substring(8);
+        }
+        var inputVal = event.currentTarget.value;
+        console.log('change predIndex #' + predIndex + "=" + inputVal);
+
     }
+
 });
 
 
