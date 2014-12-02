@@ -30,10 +30,20 @@ Meteor.publish("predicateQueue", function () {
     return Predicates.find({ creator: this.userId, validity: {$lte: 0} });
 });
 
-lookupMapping = function(info, callback) {
-    Mappings.find({textLC: info.textLC, mapType: info.mapType}, function(err, result) {
+lookupHeaderMapping = function(info, callback) {
+    Mappings.find({textLC: info.textLC, mapType: "Predicate"}, function(err, result) {
         if (err) {
-            console.log("Error in lookupMapping: " + err);
+            console.log("Error in lookupHeaderMapping: " + err);
+            callback(err);
+        }
+        callback(null, result);
+    });
+};
+
+lookupRowMapping = function(info, callback) {
+    Mappings.find({textLC: info.textLC, mapType: "Entity"}, function(err, result) {
+        if (err) {
+            console.log("Error in lookupRowMapping: " + err);
             callback(err);
         }
         callback(null, result);

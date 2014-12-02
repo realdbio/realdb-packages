@@ -42,10 +42,10 @@
         <div class="col-md-12">
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <h3 class="panel-title">3. What is in each column?</h3>
+                    <h3 class="panel-title">4. Fix it</h3>
                 </div>
                 <div class="panel-body">
-                    {{> columnMapper }}
+                    {{> dataloaderTable }}
                 </div>
             </div>
         </div>
@@ -72,18 +72,18 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Clarify Your Data</h3>
-                </div>
-                <div class="panel-body">
-                    {{> dataQueue }}
-                </div>
-            </div>
-        </div>
-    </div>
+    <!--<div class="row">-->
+        <!--<div class="col-md-12">-->
+            <!--<div class="panel panel-info">-->
+                <!--<div class="panel-heading">-->
+                    <!--<h3 class="panel-title">Clarify Your Data</h3>-->
+                <!--</div>-->
+                <!--<div class="panel-body">-->
+                    <!--{{> dataQueue }}-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
 </template>
 
 
@@ -98,7 +98,7 @@
             </form>
         </div>
         <div class="col-md-1">
-            {{> dataloaderOKButton sessionVariable="dataTextAreaContents" }}
+            {{> dataloaderOKButton sessionVariable="rawDataStr" }}
         </div>
     </div>
     </div>
@@ -149,38 +149,38 @@
 
 
 
-<template name="columnMapper">
-    {{#each session "dataColumns"}}
-        <div class="row">
-            <div class="col-md-2">
-                {{text}}
-            </div>
+<!--<template name="columnMapper">-->
+    <!--{{#each session "headerMappings"}}-->
+        <!--<div class="row">-->
+            <!--<div class="col-md-2">-->
+                <!--{{text}}-->
+            <!--</div>-->
 
-            <div class="col-md-3">
-                {{predName}}
-            </div>
+            <!--<div class="col-md-3">-->
+                <!--{{predName}}-->
+            <!--</div>-->
 
-            <div class="col-md-3">
-                <div class="{{isVisible}}">
-                    {{> esInput index="predicates" placeholder="Search..." class="realdbio-columnMapper-predSearch" id=predColId}}
-                </div>
-            </div>
-            <div class="col-md-3">
-                {{#ifEsHasNoResults index="predicates" }}
-                <div class="no-results">Create new property:
-                    <button type="button" class="btn-sm {{ predButtonClass }} realdb-pred-btn" id="newPred">
-                        <span class="glyphicon glyphicon-{{ getIconForPred }}"></span> {{newPredName}}
-                    </button>
-                </div>
-                {{/ifEsHasNoResults}}
-            </div>
+            <!--<div class="col-md-3">-->
+                <!--<div class="{{isVisible}}">-->
+                    <!--{{> esInput index="predicates" placeholder="Search..." value="whatever dude" class="realdbio-columnMapper-predSearch" id=predColId}}-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="col-md-3">-->
+                <!--{{#ifEsHasNoResults index="predicates" }}-->
+                <!--<div class="no-results">Create new property:-->
+                    <!--<button type="button" class="btn-sm {{ predButtonClass }} realdb-pred-btn" id="newPred">-->
+                        <!--<span class="glyphicon glyphicon-{{ getIconForPred }}"></span> {{getNewPredName}}-->
+                    <!--</button>-->
+                <!--</div>-->
+                <!--{{/ifEsHasNoResults}}-->
+            <!--</div>-->
 
-            <div class="col-md-1">
-                {{> dataloaderOKButton sessionVariable="predMappings" }}
-            </div>
-        </div>
-    {{/each}}
-</template>
+            <!--<div class="col-md-1">-->
+                <!--{{> dataloaderOKButton sessionVariable="predMappings" }}-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--{{/each}}-->
+<!--</template>-->
 
 
 <!--<template name="pred-item">-->
@@ -231,8 +231,30 @@
 
 
 
-<template name="dataQueue">
-    {{#each dataQueueItems }}
-    {{ title }}
-    {{/each}}
+<!--<template name="dataQueue">-->
+    <!--{{#each dataQueueItems }}-->
+    <!--{{ title }}-->
+    <!--{{/each}}-->
+<!--</template>-->
+
+<template name="dataloaderTable">
+    <div class="table-responsive">
+        <table class="table table-condensed table-striped">
+            <thead>
+                <tr>Name</tr>
+                {{#each session headerMappings}}
+                    <tr>{{text}}</tr>
+                {{/each}}
+            </thead>
+            <tbody>
+                {{#each session rowMappings}}
+                    <tr>
+                        <td>
+                            data here
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
 </template>

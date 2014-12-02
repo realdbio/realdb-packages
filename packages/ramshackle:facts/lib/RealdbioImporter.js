@@ -45,9 +45,10 @@ RealdbioImporter.prototype.import = function(data) {
         }
 
         for (var ci in cells) {
-            var colType = self.config.dataColumns[ci].colType;
+//            var colType = self.config.dataColumns[ci].colType;
             var header = self.config.dataColumns[ci].header;
-            if (colType=="ignore") continue;
+//            if (colType=="ignore") continue;
+
             var cell = cells[ci];
             if (!cell) continue;
 
@@ -55,16 +56,17 @@ RealdbioImporter.prototype.import = function(data) {
 //            var theFacts = facts[ci];
 
 
-            if (colType=="title") {
+            if (ci==0) {
                 entity.title = cell;
                 entities[li] = entity;
-            } else if (colType=="description" || colType=="synonym") {
-                var description = entity.description || "";
-                if (description && description.length > 0) description += "; ";
-                description += cell;
-                entity.description = description;
-                entities[li] = entity;
-            } else if (colType=="datum") {
+//            } else if (colType=="description" || colType=="synonym") {
+//                var description = entity.description || "";
+//                if (description && description.length > 0) description += "; ";
+//                description += cell;
+//                entity.description = description;
+//                entities[li] = entity;
+//            } else if (colType=="datum") {
+            } else {
                 var numericVal = null;
                 if(isNumber(cell)) {
                     numericVal = cell;

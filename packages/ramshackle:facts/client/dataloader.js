@@ -9,7 +9,7 @@ Meteor.subscribe("factQueue");
 Template.dataLoader.helpers({
     importButtonClass: function() {
         if (Session.get("entityTypeId")
-            && Session.get("dataTextAreaContents")
+            && Session.get("rawDataStr")
             && Session.get("datesSpecified") ) {
             return "btn-success";
         }
@@ -21,21 +21,31 @@ Template.dataLoader.events({
    "click #importButton": function() {
        var importStrategy = {
            delimiter: Session.get("delimiter"),
-           dataHeadersLC: Session.get("dataHeadersLC"),
-           dataHeaders: Session.get("dataHeaders"),
+           headerSignatureLC: Session.get("headerSignatureLC"),
+           headerSignature: Session.get("headerSignature"),
            entityTypeId: Session.get("entityTypeId"),
            entityTypeName: Session.get("entityTypeName"),
-//           dataTextAreaContents: Session.get("dataTextAreaContents"),
-           dataColumns: Session.get("dataColumns"),
+//           rawDataStr: Session.get("rawDataStr"),
+           headerMappings: Session.get("headerMappings"),
            beginningOfTime: Session.get("beginningOfTime"),
            startDate: Session.get("startDate"),
            eternity: Session.get("eternity"),
            endDate: Session.get("endDate")
-       }
+       };
        console.log("importStrategy=" + JSON.stringify(importStrategy));
 
+       var payload = {
+           strategy: Session.get("importStrategy"),
+           rawDataStr: Session.get("rawDataStr")
+       }
+       Meteor.call("bulkLoad", payload, function(error, result) {
+           // display the error to the user and abort
+           if (error)
+               return console.log("Error calling bulkLoad: " + error.reason);
+           console.log("bulkLoad returns: " + result);
+       });
        var importer = new RealdbioImporter(importStrategy);
-       importer.import(Session.get("dataTextAreaContents"));
+       importer.import(Session.get("rawDataStr"));
    }
 });
 
@@ -52,8 +62,9 @@ Template.dataTextArea.events({'keyup': function (event, template) {
 
 //    console.log("textarea=" + textarea.value);
 
-    Session.set("dataTextAreaContents", textarea.value);
-    var headerRow = textarea.value.split('\n')[0];
+    Session.set("rawDataStr", textarea.value);
+    var rows = textarea.value.split('\n');
+    var headerRow = rows[0];
     var delim = ",";
     //if a semicolon is in the first row then it is the delim
     if (headerRow.indexOf(";") >= 0) delim = ";";
@@ -63,7 +74,7 @@ Template.dataTextArea.events({'keyup': function (event, template) {
     var headers = headerRow.split(delim);
     console.log("headers=" + headers);
     var cols = [];
-//    var existingCols = Session.get("dataColumns");
+//    var existingCols = Session.get("headerMappings");
     var headerStr = "";
     var headerStrLC = "";
     var headersLC = [];
@@ -78,31 +89,66 @@ Template.dataTextArea.events({'keyup': function (event, template) {
         headerStrLC += headerLCVal;
         headersLC.push(headerStrLC);
 
-        var mapping = {
+        var headerMapping = {
             predIndex: ci,
             predColId: "predCol-" + ci,
             text: headerVal,
             textLC: headerLCVal
         };
-        cols.push(mapping);
+        cols.push(headerMapping);
         ci++;
     }
 
-    Session.set("dataHeaders", headerStr);
-    Session.set("dataHeadersLC", headerStrLC);
-    Session.set("dataColumns", cols);
-//    console.log("cols=" + JSON.stringify(cols));
+    Session.set("headerSignature", headerStr);
+    Session.set("headerSignatureLC", headerStrLC);
+    //TODO lookup strategies
+
+    Session.set("headerMappings", cols);
+    //TODO lookup header mappings
+
+    //next create the row mappings
+    var rowMappings = [];
+    var rowData = [];
+    var di = 0;
+    for (var ri in rows) {
+        if (ri == 0) continue;
+        var rowStr = rows[ri];
+        var rowCells = rowStr.split(delim);
+        var rowName = rowCells[0];
+
+        if (rowName) rowName = rowName.trim();
+        //skip rows without a name
+        if (!rowName) {
+            di++;
+            continue;
+        }
+        var rowMapping = {
+            dataIndex: di,
+            text: rowName,
+            textLC: rowName.toLowerCase()
+        };
+        rowMappings.push(rowMapping);
+        rowCells.shift();
+        rowData.push(rowCells);
+        di++;
+    }
+    console.log("rowMappings=" + JSON.stringify(rowMappings));
+    Session.set("rowMappings", rowMappings);
+    Session.set("rowData", rowData);
 
     if (! Session.get("entityTypeId") || Session.get("entityTypeId")=="newType") return;
-    var importInfo = {
-        type: Session.get("entityTypeId"),
-        headerStr: headerStr,
-        headerStrLC: headerStrLC,
-        headers: headers,
-        headersLC: headersLC
-    };
 
-    //look up any mappings
+    //TODO lookup strategies
+
+    //TODO lookup row mappings
+    //look up any mappings all at once?
+//    var importInfo = {
+//        type: Session.get("entityTypeId"),
+//        headerStr: headerStr,
+//        headerStrLC: headerStrLC,
+//        headers: headers,
+//        headersLC: headersLC
+//    };
 //    Meteor.call("lookupStrategy", importInfo, function(error, result) {
 //        if (error) {
 //            console.log("error trying to call lookupMappings: " + error);
@@ -119,7 +165,7 @@ Template.dataTextArea.events({'keyup': function (event, template) {
 //
 //            cols[hi].pred = strategy.rowMappings[headerLC];
 //        }
-//        Session.set("dataColumns", cols);
+//        Session.set("headerMappings", cols);
 //
 //    });
 
@@ -198,65 +244,13 @@ Template.typeChooserCreator.events({
     }
 });
 
-var predSearchInstances = [];
-var predSearchIndex = 0;
-Template.columnMapper.created = function () {
-    var instance = EasySearch.getComponentInstance(
-        { index : 'predicates' }
-    );
-//    instance.predSearchIndex = predSearchIndex;
-//    predSearchInstances[predSearchIndex] = instance;
-    instance.on('searchingDone', function (searchingIsDone) {
-        searchingIsDone && console.log('I am done searching!');
-    });
 
-    instance.on('currentValue', function (val) {
-
-        console.log('The user searches for ' + val + '; index#=' + predSearchIndex);
-        var cols = Session.get("dataColumns");
-//        console.log("change #realdbio-columnMapper-predSearch: cols[" + this.predIndex + "]=" + cols[this.predIndex]);
-//        this.newPredName = event.currentTarget.value;
-    });
-};
-
-Template.columnMapper.helpers({
-    isVisible: function() {
-        if (this.predIndex == predSearchIndex) {
-            return "";
-        } else {
-//            return "hidden";
-            return "";
-        }
-    }
-});
-
-Template.columnMapper.events({
-//    'currentValue': function(event, template) {
-//        console.log('change predSearchInstance #' + this.predIndex);
-//    }
-
-    'keyup': function(event, template) {
-        var elementId = event.currentTarget.id;
-        var predIndex = -1;
-        if (elementId.indexOf("predCol-")==0) {
-            predIndex = elementId.substring(8);
-        }
-        var inputVal = event.currentTarget.value;
-        console.log('change predIndex #' + predIndex + "=" + inputVal);
-
-    }
-
-});
 
 
 Template.datePickers.rendered = function() {
     $('.datetimepicker').datetimepicker({
         format: 'YYYY-MM-DD HH:MM:SS'
     })
-
-//        .on('changeDate', function(ev){
-//            console.log("Date changed!: " + ev);
-//        });
 };
 
 Template.datePickers.events({
@@ -306,8 +300,46 @@ Template.datePickers.events({
 });
 
 
-Template.dataQueue.helpers({
-    dataQueueItems: function() {
-        return [{title: "Item #1"}, {title: "Another item"}];
-    }
-});
+//Template.dataQueue.helpers({
+//    dataQueueItems: function() {
+//        return [{title: "Item #1"}, {title: "Another item"}];
+//    }
+//});
+//var predSearchInstances = [];
+//var predSearchIndex = 0;
+//Template.columnMapper.created = function () {
+//    var instance = EasySearch.getComponentInstance(
+//        { index : 'predicates' }
+//    );
+//    instance.on('searchingDone', function (searchingIsDone) {
+//        searchingIsDone && console.log('I am done searching!');
+//    });
+//};
+//Template.columnMapper.helpers({
+//    isVisible: function() {
+//        if (this.predIndex == predSearchIndex) {
+//            return "";
+//        } else {
+//            return "hidden";
+//        }
+//    },
+//    getNewPredName: function() {
+//        return "new pred name nere";
+//    }
+//});
+//Template.columnMapper.events({
+//    'keyup': function(event, template) {
+//        var elementId = event.currentTarget.id;
+//        var predIndex = -1;
+//        if (elementId.indexOf("predCol-")==0) {
+//            predIndex = elementId.substring(8);
+//        }
+//        var dataCols = Session.get("headerMappings");
+//        var inputVal = event.currentTarget.value;
+//        console.log('change predIndex #' + predIndex + "=" + inputVal);
+//        dataCols[predIndex].newPredName = inputVal;
+//        dataCols[predIndex].predName = inputVal;
+//        console.log("dataCols=" + JSON.stringify(dataCols));
+//        Session.set("headerMappings", dataCols);
+//    }
+//});
