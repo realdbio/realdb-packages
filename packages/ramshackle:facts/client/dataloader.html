@@ -241,17 +241,22 @@
     <div class="table-responsive">
         <table class="table table-condensed table-striped">
             <thead>
-                <tr>Name</tr>
-                {{#each session headerMappings}}
-                    <tr>{{text}}</tr>
+                <th>Name</th>
+                {{#each session "headerMappings"}}
+                    <th>{{text}}</th>
                 {{/each}}
             </thead>
             <tbody>
-                {{#each session rowMappings}}
+                {{#each session "rowMappings"}}
                     <tr>
                         <td>
-                            data here
+                            {{text}}
                         </td>
+                        {{#each getData rowIndex}}
+                            <td>
+                                {{this}}
+                            </td>
+                        {{/each}}
                     </tr>
                 {{/each}}
             </tbody>

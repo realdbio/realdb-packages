@@ -123,7 +123,7 @@ Template.dataTextArea.events({'keyup': function (event, template) {
             continue;
         }
         var rowMapping = {
-            dataIndex: di,
+            rowIndex: ri,
             text: rowName,
             textLC: rowName.toLowerCase()
         };
@@ -245,6 +245,13 @@ Template.typeChooserCreator.events({
 });
 
 
+Template.dataloaderTable.helpers({
+   getData: function(rowIndex) {
+       var rowData = Session.get("rowData");
+       var thisRowData = rowData[rowIndex];
+       return thisRowData;
+   }
+});
 
 
 Template.datePickers.rendered = function() {
