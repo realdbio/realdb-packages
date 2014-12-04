@@ -123,7 +123,7 @@ Template.dataTextArea.events({'keyup': function (event, template) {
             continue;
         }
         var rowMapping = {
-            rowIndex: ri,
+            dataRowIndex: di,
             text: rowName,
             textLC: rowName.toLowerCase()
         };
