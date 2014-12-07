@@ -31,6 +31,7 @@ Measures.attachSchema(Schemas.Measure);
 
 Schemas.Type = new SimpleSchema({
     name: { type: String, label: "Name" }, //the canonical name
+    nameLC: { type: String }, //lower case version of the canonical name
     description: { type: String, label: "Description", optional: true }, //the description
     uri: { type: String, optional: true }, //the RDF URI
     ns: { type: String, optional: true }, //the RDF namespace
@@ -45,6 +46,7 @@ Types.attachSchema(Schemas.Type);
 
 Schemas.Entity = new SimpleSchema({
     name: { type: String, label: "Name" }, //the canonical name
+    nameLC: { type: String }, //lower case version of the canonical name
     description: { type: String, label: "Description", optional: true }, //the description
     uri: { type: String, optional: true }, //the RDF URI
     ns: { type: String, optional: true }, //the RDF namespace
@@ -59,6 +61,7 @@ Entities.attachSchema(Schemas.Entity);
 
 Schemas.Predicate = new SimpleSchema({
     name: { type: String, label: "Name" }, //the canonical name
+    nameLC: { type: String }, //lower case version of the canonical name
     description: { type: String, optional: true, label: "Description" }, //the description
     measure: { type: Schemas.Measure, optional: true }, //the type of measure, if any
     uri: { type: String, optional: true }, //the RDF URI
@@ -74,6 +77,7 @@ Predicates.attachSchema(Schemas.Predicate);
 
 Schemas.Source = new SimpleSchema({
     name: { type: String, label: "Name" }, //the canonical name
+    nameLC: { type: String }, //lower case version of the canonical name
     description: { type: String, label: "Description" }, //the description
     uri: { type: String, optional: true }, //the RDF URI
     ns: { type: String, optional: true }, //the RDF namespace
@@ -149,6 +153,7 @@ Schemas.Item = new SimpleSchema({
  */
 Schemas.List = new SimpleSchema({
     name: { type: String, label: "Name" },
+    nameLC: { type: String }, //lower case version of the canonical name
     description: { type: String, label: "Description" }, //the description
     type: { type: Object }, //the type of items.  key=type id, value=Type object
     entities: { type: Object }, //the entities within the items.  key=entity id, value=Entity object

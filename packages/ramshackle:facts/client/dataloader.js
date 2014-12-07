@@ -27,6 +27,8 @@ Template.dataLoader.events({
            entityTypeName: Session.get("entityTypeName"),
 //           rawDataStr: Session.get("rawDataStr"),
            headerMappings: Session.get("headerMappings"),
+           rowMappings: Session.get("rowMappings"),
+           rowData: Session.get("rowData"),
            beginningOfTime: Session.get("beginningOfTime"),
            startDate: Session.get("startDate"),
            eternity: Session.get("eternity"),
@@ -35,17 +37,18 @@ Template.dataLoader.events({
        console.log("importStrategy=" + JSON.stringify(importStrategy));
 
        var payload = {
-           strategy: Session.get("importStrategy"),
-           rawDataStr: Session.get("rawDataStr")
-       }
-       Meteor.call("bulkLoad", payload, function(error, result) {
+//           strategy: Session.get("importStrategy"),
+//           rawDataStr: Session.get("rawDataStr")
+           strategy: importStrategy
+       };
+       Meteor.call("importStrategyData", payload, function(error, result) {
            // display the error to the user and abort
            if (error)
                return console.log("Error calling bulkLoad: " + error.reason);
-           console.log("bulkLoad returns: " + result);
+           console.log("importStrategyData returns: " + result);
        });
-       var importer = new RealdbioImporter(importStrategy);
-       importer.import(Session.get("rawDataStr"));
+//       var importer = new RealdbioImporter(importStrategy);
+//       importer.import(Session.get("rawDataStr"));
    }
 });
 
