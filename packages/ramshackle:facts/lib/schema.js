@@ -170,7 +170,7 @@ Schemas.List = new SimpleSchema({
 Lists.attachSchema(Schemas.List);
 
 Schemas.Mapping = new SimpleSchema({
-    mapEtype: { type: String, allowedValues: ['Etype', 'Entity', 'Predicate'], index: 1 }, //the type: TRUE, FALSE, GOOD, BAD, ...
+    mtype: { type: String, allowedValues: ['Etype', 'Entity', 'Predicate'], index: 1 }, //the type: TRUE, FALSE, GOOD, BAD, ...
     text: { type: String, index: 1 }, //the text value that is mapped
     textLC: { type: String, index: 1 }, //lower case of the text value that is mapped
     etype: { type: String, optional: true }, //the type this maps to

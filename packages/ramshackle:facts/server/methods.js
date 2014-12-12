@@ -105,7 +105,7 @@ Meteor.methods({
             if (err) {
                 console.log("lookupHeaderMappings error: " + err);
             }
-            mappings[mapping.name] = mapping.values;
+            mappings[mapping.text] = mapping.values;
         });
     },
 
@@ -127,7 +127,7 @@ Meteor.methods({
             if (err) {
                 console.log("lookupRowMappings error: " + err);
             }
-            mappings[mapping.name] = mapping.values;
+            mappings[mapping.text] = mapping.values;
         });
     },
 
@@ -135,6 +135,7 @@ Meteor.methods({
     importStrategyData: function(payload) {
         var s = payload.strategy;
 
+        console.log("Received Strategy: " + JSON.stringify(s));
         //TODO see if this strategy has been stored. If not, store it
 
         var etypeId = s.etypeId;
@@ -158,7 +159,7 @@ Meteor.methods({
 
         //Import Col Mappings
         for (var ci in s.headerMappings) {
-            var headerMapping = s.headerMappings[ri];
+            var headerMapping = s.headerMappings[ci];
             if (! headerMapping) {
                 console.log("No header mapping for column index=" + ci);
                 continue;
@@ -169,13 +170,14 @@ Meteor.methods({
                 //TODO in the future, require mappings to be specified
                 pred = {
                     _id: new Meteor.Collection.ObjectID()._str,
-                    name: headerMapping.name,
-                    nameLC: headerMapping.name.toLowerCase(),
+                    name: headerMapping.text,
+                    nameLC: headerMapping.text.toLowerCase(),
                     updated: new Date(),
                     creator: Meteor.userId()
                 };
                 Predicates.insert(pred);
                 headerMapping.pred = pred._id;
+                console.log("No header mapping to pred mapping specified so far mapping=" + JSON.stringify(headerMapping));
             } else {
                 pred = Predicates.findOne(headerMapping.pred);
                 if (! pred) {
@@ -194,10 +196,11 @@ Meteor.methods({
 
             //TODO only store if such a mapping (this name to this predicate) does not exist.
             //store the mapping
-            headerMapping.mapEtype = "Predicate";
+            headerMapping.mtype = "Predicate";
             headerMapping.created = new Date();
             headerMapping.creator = Meteor.userId();
             headerMapping.updated = new Date();
+            headerMapping.textLC = headerMapping.text.toLowerCase();
             console.log("insert headerMapping #" + ci + ": " + JSON.stringify(headerMapping));
             Mappings.insert(headerMapping);
         }
@@ -209,7 +212,7 @@ Meteor.methods({
                 console.log("No row mapping for row index=" + ri);
                 continue;
             }
-            rowMapping.mapEtype = "Entity";
+            rowMapping.mtype = "Entity";
             rowMapping.created = new Date();
             rowMapping.creator = Meteor.userId();
             rowMapping.updated = new Date();
@@ -227,7 +230,10 @@ Meteor.methods({
                 };
                 rowMapping.entity = subject._id;
                 Entities.insert(subject, function(err, newId) {
-                    rowMapping.entity = subject._id;
+                    if (err) {
+                        console.log("Insert Rows A: Error inserting new subject: " + JSON.stringify(subject) + "\n" + err);
+                        return;
+                    }
 
                     //TODO only store if such a mapping (this name to this entity) does not exist.
                     //store the mapping
@@ -246,6 +252,10 @@ Meteor.methods({
                         creator: Meteor.userId()
                     };
                     Entities.insert(subject, function(err, newId) {
+                        if (err) {
+                            console.log("Insert Rows B: Error inserting new subject: " + JSON.stringify(subject) + "\n" + err);
+                            return;
+                        }
                         //TODO only store if such a mapping (this name to this entity) does not exist.
                         //store the mapping
                         console.log("inserting rowMapping: " + JSON.stringify(rowMapping));
@@ -253,8 +263,6 @@ Meteor.methods({
                     });
                 }
             }
-
-
         }
 
         //Import data
