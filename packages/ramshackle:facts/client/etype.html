@@ -1,5 +1,5 @@
-<template name="formTypeInsert">
-    <form id="formTypeInsert">
+<template name="formEtypeInsert">
+    <form id="formEtypeInsert">
         <label>Name</label><input type="text" name="name"/>
         <label>Description</label><input type="text" name="description"/>
         <input type="submit" value="Add"/>
@@ -7,7 +7,7 @@
 </template>
 
 
-<!--<template name="listTypes">-->
+<!--<template name="listEtypes">-->
 <!--<div class="ui list">-->
 <!--{{#each types}}-->
 <!--<div class="item">-->
@@ -40,28 +40,28 @@
 <!--</div>-->
 <!--</template>-->
 
-<template name="listMyTypes">
+<template name="listMyEtypes">
     <div class="list">
-        {{#each types}}
+        {{#each etypes}}
         <div class="item">
             <p>
-                {{> typeItem}}
+                {{> etypeItem}}
             </p>
         </div>
         {{/each}}
     </div>
 </template>
 
-<template name="typeButton">
-    <button type="button" class="btn-sm {{ typeButtonClass }} realdb-type-btn" id="{{_id}}">
+<template name="etypeButton">
+    <button type="button" class="btn-sm {{ etypeButtonClass }} realdb-etype-btn" id="{{_id}}">
         <span class="glyphicon glyphicon-{{icon}} glyphicon-align-left"></span> {{name}}
     </button>
 </template>
 
-<template name="typeItem">
+<template name="etypeItem">
     <div class="btn-group-sm">
-        {{> typeButton icon='book' name=name _id=_id}}
-        <button type="button" id="realdb-btn-type-info-{{_id}}" class="btn-sm btn-default" data-container="body" data-toggle="popover" title="{{name}}" data-content="{{description}}">
+        {{> etypeButton icon='book' name=name _id=_id}}
+        <button type="button" id="realdb-btn-etype-info-{{_id}}" class="btn-sm btn-default" data-container="body" data-toggle="popover" title="{{name}}" data-content="{{description}}">
             <span class="glyphicon glyphicon-info-sign"></span>
         </button>
         <!--<button type="button" id="realdb-btn-type-plus-{{_id}}" class="btn btn-primary">-->
@@ -81,11 +81,11 @@
     </div>
 </template>
 
-<template name="typeSearchBox">
-    {{> esInput index="types" placeholder="Search..." }}
-    {{#esEach index="types"}}
+<template name="etypeSearchBox">
+    {{> esInput index="etypes" placeholder="Search..." }}
+    {{#esEach index="etypes"}}
     <div class="item">
-    {{> typeItem}}
+    {{> etypeItem}}
     </div>
     {{/esEach}}
 </template>

@@ -8,7 +8,7 @@ Meteor.subscribe("factQueue");
 
 Template.dataLoader.helpers({
     importButtonClass: function() {
-        if (Session.get("entityTypeId")
+        if (Session.get("etypeId")
             && Session.get("rawDataStr")
             && Session.get("datesSpecified") ) {
             return "btn-success";
@@ -23,8 +23,8 @@ Template.dataLoader.events({
            delimiter: Session.get("delimiter"),
            headerSignatureLC: Session.get("headerSignatureLC"),
            headerSignature: Session.get("headerSignature"),
-           entityTypeId: Session.get("entityTypeId"),
-           entityTypeName: Session.get("entityTypeName"),
+           etypeId: Session.get("etypeId"),
+           etypeName: Session.get("etypeName"),
 //           rawDataStr: Session.get("rawDataStr"),
            headerMappings: Session.get("headerMappings"),
            rowMappings: Session.get("rowMappings"),
@@ -95,8 +95,8 @@ Template.dataTextArea.events({'keyup': function (event, template) {
         var headerMapping = {
             predIndex: ci,
             predColId: "predCol-" + ci,
-            text: headerVal,
-            textLC: headerLCVal
+            text: headerVal
+//            textLC: headerLCVal
         };
         cols.push(headerMapping);
         ci++;
@@ -127,8 +127,8 @@ Template.dataTextArea.events({'keyup': function (event, template) {
         }
         var rowMapping = {
             dataRowIndex: di,
-            text: rowName,
-            textLC: rowName.toLowerCase()
+            text: rowName
+//            textLC: rowName.toLowerCase()
         };
         rowMappings.push(rowMapping);
         rowCells.shift();
@@ -139,14 +139,14 @@ Template.dataTextArea.events({'keyup': function (event, template) {
     Session.set("rowMappings", rowMappings);
     Session.set("rowData", rowData);
 
-    if (! Session.get("entityTypeId") || Session.get("entityTypeId")=="newType") return;
+    if (! Session.get("etypeId") || Session.get("etypeId")=="newEtype") return;
 
     //TODO lookup strategies
 
     //TODO lookup row mappings
     //look up any mappings all at once?
 //    var importInfo = {
-//        type: Session.get("entityTypeId"),
+//        type: Session.get("etypeId"),
 //        headerStr: headerStr,
 //        headerStrLC: headerStrLC,
 //        headers: headers,
@@ -174,47 +174,47 @@ Template.dataTextArea.events({'keyup': function (event, template) {
 
 }});
 
-typeSearchBoxUserQuery = "";
+etypeSearchBoxUserQuery = "";
 
-Template.typeChooserCreator.created = function () {
+Template.etypeChooserCreator.created = function () {
     var instance = EasySearch.getComponentInstance(
-        { id: 'typeChooser', index: 'types' }
+        { id: 'etypeChooser', index: 'etypes' }
     );
 
     instance.on('searchingDone', function (searchingIsDone) {
 //        console.log('I am done! ' + searchingIsDone);
-        Session.set("entityTypeId", null);
-        Session.set("entityTypeName", null);
+        Session.set("etypeId", null);
+        Session.set("etypeName", null);
     });
 
     instance.on('currentValue', function (val) {
 //        console.log('The user searches for ' + val);
-        typeSearchBoxUserQuery = val;
+        etypeSearchBoxUserQuery = val;
     });
 };
 
-Template.typeChooserCreator.helpers({
-    newTypeName: function() {
-        return typeSearchBoxUserQuery;
+Template.etypeChooserCreator.helpers({
+    newEtypeName: function() {
+        return etypeSearchBoxUserQuery;
     },
 
-    typeButtonClass: function() {
-//        console.log("typeButtonClass(): entityTypeId=" + Session.get("entityTypeId") + "; this._id=" + this._id);
-        if (this._id && Session.get("entityTypeId") == this._id) return "btn-success";
-        if (!this._id && Session.get("entityTypeId") == "newType") return "btn-success";
+    etypeButtonClass: function() {
+//        console.log("etypeButtonClass(): etypeId=" + Session.get("etypeId") + "; this._id=" + this._id);
+        if (this._id && Session.get("etypeId") == this._id) return "btn-success";
+        if (!this._id && Session.get("etypeId") == "newEtype") return "btn-success";
         return "";
     },
 
-    getIconForType: function(event) {
-//        console.log("getIconForType: entityTypeId=" + Session.get("entityTypeId") + "; this._id=" + this._id);
-        if (this._id && Session.get("entityTypeId") == this._id) return "ok";
-        if (!this._id && Session.get("entityTypeId") == "newType") return "ok";
+    getIconForEtype: function(event) {
+//        console.log("getIconForEtype: etypeId=" + Session.get("etypeId") + "; this._id=" + this._id);
+        if (this._id && Session.get("etypeId") == this._id) return "ok";
+        if (!this._id && Session.get("etypeId") == "newEtype") return "ok";
         return "unchecked"
     },
 
-    typeChooserFinishedIcon: function(event) {
-//        console.log("typeChooserFinishedIcon() called");
-        if (Session.get("entityTypeId")) {
+    etypeChooserFinishedIcon: function(event) {
+//        console.log("etypeChooserFinishedIcon() called");
+        if (Session.get("etypeId")) {
             return "btn btn-large btn-success";
         } else {
             return "hidden";
@@ -222,28 +222,28 @@ Template.typeChooserCreator.helpers({
     }
 });
 
-Template.typeChooserCreator.events({
-    'click .realdb-type-btn': function(event, template) {
+Template.etypeChooserCreator.events({
+    'click .realdb-etype-btn': function(event, template) {
         event.preventDefault();
         this.icon="check";
-//        console.log('click .realdb-type-btn: entityTypeId=' + Session.get("entityTypeId"));
+//        console.log('click .realdb-etype-btn: etypeId=' + Session.get("etypeId"));
         var newId = this._id;
         if (!newId) {
-            newId = 'newType';
-            //TODO filter by type?
-//            EasySearch.changeProperty('predicates', 'filterByTypes', null);
+            newId = 'newEtype';
+            //TODO filter by etype?
+//            EasySearch.changeProperty('predicates', 'filterByEtypes', null);
         } else {
-//            EasySearch.changeProperty('predicates', 'filterByTypes', newId);
+//            EasySearch.changeProperty('predicates', 'filterByEtypes', newId);
         }
         var newName = this.name;
-        if (!newName) newName = typeSearchBoxUserQuery;
-        Session.set("entityTypeId", newId);
-        Session.set("entityTypeName", newName);
+        if (!newName) newName = etypeSearchBoxUserQuery;
+        Session.set("etypeId", newId);
+        Session.set("etypeName", newName);
 
-        //set EasySearch to filter by this type
+        //set EasySearch to filter by this etype
 
 
-//        console.log('click .realdb-type-btn: Session.entityTypeId=' + Session.get("entityTypeId"));
+//        console.log('click .realdb-etype-btn: Session.etypeId=' + Session.get("etypeId"));
     }
 });
 

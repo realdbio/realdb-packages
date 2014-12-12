@@ -1,22 +1,22 @@
-<template name="entityTypeSelector">
+<template name="etypeSelector">
     <div class="search-input">
-        {{> esInput index="types" id="searchTypes" placeholder="What type of thing?" convertnumber=true }}
+        {{> esInput index="types" id="searchEtypes" placeholder="What type of thing?" convertnumber=true }}
     </div>
 
-    {{#ifEsIsSearching index="types" id="searchTypes" logic="OR" }}
+    {{#ifEsIsSearching index="types" id="searchEtypes" logic="OR" }}
     <div>Searching...</div>
     {{/ifEsIsSearching}}
 
     <div class="leaderboard">
-        {{#ifEsInputIsEmpty index="types" id="searchTypes" }}
+        {{#ifEsInputIsEmpty index="types" id="searchEtypes" }}
         <div class="please-search">Search for a type of thing (e.g. City)</div>
         {{/ifEsInputIsEmpty}}
 
-        {{#esEach index="types" id="searchTypes"}}
+        {{#esEach index="types" id="searchEtypes"}}
         {{> typeItem}}
         {{/esEach}}
 
-        {{#ifEsHasNoResults index="types" id="searchTypes" logic="OR" }}
+        {{#ifEsHasNoResults index="types" id="searchEtypes" logic="OR" }}
         <div class="no-results">No results found</div>
         {{/ifEsHasNoResults}}
     </div>

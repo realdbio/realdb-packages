@@ -3,7 +3,7 @@
 Units = new Mongo.Collection("units");
 Measures = new Mongo.Collection("measures");
 Entities = new Mongo.Collection("entities");
-Types = new Mongo.Collection("types");
+Etypes = new Mongo.Collection("etypes");
 Predicates = new Mongo.Collection("predicates");
 Sources = new Mongo.Collection("sources");
 Facts = new Mongo.Collection("facts");
@@ -29,7 +29,7 @@ Schemas.Measure = new SimpleSchema({
 });
 Measures.attachSchema(Schemas.Measure);
 
-Schemas.Type = new SimpleSchema({
+Schemas.Etype = new SimpleSchema({
     name: { type: String, label: "Name" }, //the canonical name
     nameLC: { type: String }, //lower case version of the canonical name
     description: { type: String, label: "Description", optional: true }, //the description
@@ -42,7 +42,7 @@ Schemas.Type = new SimpleSchema({
     deleted: { type: Date, optional: true },
     creator: { type: String, index: 1 }
 });
-Types.attachSchema(Schemas.Type);
+Etypes.attachSchema(Schemas.Etype);
 
 Schemas.Entity = new SimpleSchema({
     name: { type: String, label: "Name" }, //the canonical name
@@ -63,7 +63,7 @@ Schemas.Predicate = new SimpleSchema({
     name: { type: String, label: "Name" }, //the canonical name
     nameLC: { type: String }, //lower case version of the canonical name
     description: { type: String, optional: true, label: "Description" }, //the description
-    measure: { type: Schemas.Measure, optional: true }, //the type of measure, if any
+    measure: { type: String, optional: true }, //the type of measure, if any
     uri: { type: String, optional: true }, //the RDF URI
     ns: { type: String, optional: true }, //the RDF namespace
     local: { type: String, optional: true }, //the RDF local name
@@ -91,22 +91,24 @@ Schemas.Source = new SimpleSchema({
 Sources.attachSchema(Schemas.Source);
 
 Schemas.Fact = new SimpleSchema({
-    subj: { type: Schemas.Entity, index: 1 }, //the subject
+    subj: { type: String, index: 1 }, //the subject
     header: { type: String, index: 1 }, //the header before mapping to a predicate id
-    pred: { type: Schemas.Predicate, index: 1 } , //the predicate
-    obj: { type: Schemas.Entity, optional: true, index: 1 }, //the object
-    type: { type: Schemas.Type, optional: true, index: 1 }, //the type of entity
+    pred: { type: String, index: 1 } , //the predicate
+    obj: { type: String, optional: true, index: 1 }, //the object
+    etype: { type: String, optional: true, index: 1 }, //the type of entity
     text: { type: String }, //the string value
     num: { type: Number, optional: true }, //the numeric value
-    unit: { type: Schemas.Unit, optional: true }, //the unit of measure for this fact
-    mes: { type: Schemas.Measure, optional: true }, //the type of measurement,
+    unit: { type: String, optional: true }, //the unit of measure for this fact
+    mes: { type: String, optional: true }, //the type of measurement,
     norm: { type: Number, optional: true }, //the normalized value (normalized to the canonical unit for that measure
-    nunt: { type: Schemas.Unit, optional: true }, //the canonical unit for that normalized measure
-    sdt: { type: Date, optional: true, index: -1 }, //the start date.  if null, it means since the begin of time
-    edt: { type: Date, optional: true, index: -1 }, //the end date.  if null, it means forever
+    nunt: { type: String, optional: true }, //the canonical unit for that normalized measure
+    sdt: { type: Date, optional: true, index: -1 }, //the start date
+    sdf: { type: Number, defaultValue: 0, index: 1 }, //the start date flag.  0=no comment.  1=beginning of time
+    edt: { type: Date, optional: true, index: -1 }, //the end date
+    edf: { type: Number, defaultValue: 0, index: 1 }, //the end date flag.  0=no comment.  1=forever
     src: { type: String }, //the data source that this fact came in,
-    tvotes: { type: Number, optional: true }, //number of votes that this is true
-    fvotes: { type: Number, optional: true }, //number of votes that this is false
+    tvotes: { type: Number, defaultValue: 0 }, //number of votes that this is true
+    fvotes: { type: Number, defaultValue: 0 }, //number of votes that this is false
     truth: { type: Number, optional: true, defaultValue: 1.0, index: 1 }, //an estimation of the truth, 0-1, that is computed and updated, based on credentials of those who voted
     validity: { type: Number, defaultValue: 0, index: 1 }, //the validity score of the data
     created: { type: Date, defaultValue: new Date() },
@@ -119,7 +121,7 @@ Facts.attachSchema(Schemas.Fact);
 
 Schemas.Vote = new SimpleSchema({
     fact: { type: Schemas.Fact, index: 1 }, //the fact that the vote applies to
-    type: { type: String, allowedValues: ['TRUE', 'FALSE', 'GOOD', 'BAD'], index: 1 }, //the type: TRUE, FALSE, GOOD, BAD, ...
+    vtype: { type: String, allowedValues: ['TRUE', 'FALSE', 'GOOD', 'BAD'], index: 1 }, //the type: TRUE, FALSE, GOOD, BAD, ...
     text: { type: String, optional: true }, //a text value if any
     num: { type: Number, optional: true, index: 1 }, //the numeric value
     created: { type: Date, defaultValue: new Date() },
@@ -137,7 +139,7 @@ Votes.attachSchema(Schemas.Vote);
  */
 Schemas.Item = new SimpleSchema({
     subj: { type: Schemas.Entity, optional: true }, //the subject if there is 1.  Usually there is 1
-    type: { type: Schemas.Type, optional: true }, //the type of entity if there is 1.  Usually there is 1
+    etype: { type: Schemas.Etype, optional: true }, //the type of entity if there is 1.  Usually there is 1
     name: { type: String, label: "Name", optional: true },
     description: { type: String, label: "Description", optional: true }, //the description
     facts: { type: [Schemas.Fact] }
@@ -155,7 +157,7 @@ Schemas.List = new SimpleSchema({
     name: { type: String, label: "Name" },
     nameLC: { type: String }, //lower case version of the canonical name
     description: { type: String, label: "Description" }, //the description
-    type: { type: Object }, //the type of items.  key=type id, value=Type object
+    etype: { type: Object }, //the type of items.  key=type id, value=Etype object
     entities: { type: Object }, //the entities within the items.  key=entity id, value=Entity object
     properties: { type: Object }, //the predicates within the items.  key=predicate id, value=Predicate object
     items: { type: [Schemas.Item] },//the items within the list
@@ -168,17 +170,17 @@ Schemas.List = new SimpleSchema({
 Lists.attachSchema(Schemas.List);
 
 Schemas.Mapping = new SimpleSchema({
-    mapType: { type: String, allowedValues: ['Type', 'Entity', 'Predicate'], index: 1 }, //the type: TRUE, FALSE, GOOD, BAD, ...
+    mapEtype: { type: String, allowedValues: ['Etype', 'Entity', 'Predicate'], index: 1 }, //the type: TRUE, FALSE, GOOD, BAD, ...
     text: { type: String, index: 1 }, //the text value that is mapped
     textLC: { type: String, index: 1 }, //lower case of the text value that is mapped
-    type: { type: Schemas.Type, optional: true }, //the type this maps to
-    entity: { type: Schemas.Entity, optional: true }, //the entity this maps to
-    pred: { type: Schemas.Predicate, optional: true }, //the predicate this maps to
+    etype: { type: String, optional: true }, //the type this maps to
+    entity: { type: String, optional: true }, //the entity this maps to
+    pred: { type: String, optional: true }, //the predicate this maps to
     created: { type: Date, defaultValue: new Date() },
     updated: { type: Date, optional: true },
     deleted: { type: Date, optional: true },
     used: { type: Date, optional: true }, //date last used
-    useCount: { type: Number, index: -1 }, //number of times this mapping has been used
+    useCount: { type: Number, index: -1, defaultValue: 0 }, //number of times this mapping has been used
     creator: { type: String, index: 1 }
 });
 Mappings.attachSchema(Schemas.Mapping);
@@ -188,11 +190,15 @@ Schemas.Strategy = new SimpleSchema({
     headersLC: { type: String, index: 1 }, //header line converted to lower case
     headerMappings: { type: Object, optional: true }, //key=header lower case, value=Mapping object
     rowMappings: { type: Object, optional: true }, //lower case of the text value that is mapped
+//    startDate: { type: Date, optional: true }, //if there is a global start date for this import
+//    beginningOfTime: {type: Boolean, optional: true}, //if true, mark as beginning of time
+//    endDate: { type: Date, optional: true }, //if there is a global end date for this import
+//    eternity: {type: Boolean, optional: true}, //if true, mark as forever
     created: { type: Date, defaultValue: new Date() },
     updated: { type: Date, optional: true },
     deleted: { type: Date, optional: true },
     used: { type: Date, optional: true }, //date last used
-    useCount: { type: Number, index: -1 }, //number of times this strategy has been used
+    useCount: { type: Number, index: -1, defaultValue: 0 }, //number of times this strategy has been used
     creator: { type: String, index: 1 }
 });
 Strategies.attachSchema(Schemas.Strategy);

@@ -10,7 +10,7 @@
                     <ul>
                         <li>Each row in your spreadsheet will be a different one of these things.</li>
                     </ul>
-                    {{> typeChooserCreator }}
+                    {{> etypeChooserCreator }}
                 </div>
             </div>
         </div>
@@ -104,35 +104,35 @@
     </div>
 </template>
 
-<template name="typeChooserCreator">
+<template name="etypeChooserCreator">
     <div class="container">
         <div class="row">
             <div class="col-md-7">
-                {{> esInput index="types" placeholder="Search..." id="typeChooser" }}
+                {{> esInput index="etypes" placeholder="Search..." id="etypeChooser" }}
             </div>
             <div class="col-md-4">
-                {{#ifEsHasNoResults index="types" id="typeChooser" }}
+                {{#ifEsHasNoResults index="etypes" id="etypeChooser" }}
                     <div class="no-results">Create new type:
-                        <button type="button" class="btn-sm {{ typeButtonClass }} realdb-type-btn" id="newType">
-                            <span class="glyphicon glyphicon-{{ getIconForType }}"></span> {{newTypeName}}
+                        <button type="button" class="btn-sm {{ etypeButtonClass }} realdb-etype-btn" id="newEtype">
+                            <span class="glyphicon glyphicon-{{ getIconForEtype }}"></span> {{newEtypeName}}
                         </button>
                     </div>
                 {{/ifEsHasNoResults}}
             </div>
             <div class="col-md-1">
-                {{> dataloaderOKButton sessionVariable="entityTypeId" }}
+                {{> dataloaderOKButton sessionVariable="etypeId" }}
             </div>
         </div>
         <div class="row">
             <div class="col-md-6">
-                {{#ifEsIsSearching index="types" id="typeChooser" }}
+                {{#ifEsIsSearching index="etypes" id="etypeChooser" }}
                     <div>Searching...</div>
                 {{/ifEsIsSearching}}
 
-                {{#esEach index="types" id="typeChooser"}}
+                {{#esEach index="etypes" id="etypeChooser"}}
                 <div class="item">
-                    <button type="button" class="btn-sm {{ typeButtonClass }} realdb-type-btn" id="{{_id}}">
-                        <span class="glyphicon glyphicon-{{ getIconForType }}"></span> {{name}}
+                    <button type="button" class="btn-sm {{ etypeButtonClass }} realdb-etype-btn" id="{{_id}}">
+                        <span class="glyphicon glyphicon-{{ getIconForEtype }}"></span> {{name}}
                     </button>
                 </div>
                 {{/esEach}}

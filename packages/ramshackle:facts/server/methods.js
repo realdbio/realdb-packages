@@ -11,16 +11,16 @@ Meteor.methods({
         Entities.insert(entity);
     },
 
-    addType: function (type) {
+    addEtype: function (etype) {
         // Make sure the user is logged in before inserting a task
         if (! Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
 
-        type.created = new Date();
-        type.creator = Meteor.userId();
+        etype.created = new Date();
+        etype.creator = Meteor.userId();
 
-        Types.insert(type);
+        Etypes.insert(etype);
     },
 
     /**
@@ -35,7 +35,7 @@ Meteor.methods({
 //        //TODO security!  Who is allowed, how many may they load
 //        console.log("Bulk Loading data: " + JSON.stringify(data));
 //
-//        //store types
+//        //store etypes
 //        for (var i in data.types) {
 //            var obj = data.types[i];
 //            if (!obj) continue;
@@ -43,7 +43,7 @@ Meteor.methods({
 //            obj.created = new Date();
 //            obj.updated = new Date();
 //            obj.validity = 0;
-//            Types.insert(obj);
+//            Etypes.insert(obj);
 //        }
 //
 //        //store entities
@@ -137,93 +137,157 @@ Meteor.methods({
 
         //TODO see if this strategy has been stored. If not, store it
 
-        var type = {
-            _id: s.entityTypeId,
-            name: s.entityTypeName
+        var etypeId = s.etypeId;
+        if (etypeId=="newEtype") etypeId = null;
+        console.log("old etypeId=" + etypeId);
+        if (! etypeId) {
+            etypeId = new Meteor.Collection.ObjectID()._str;
+            console.log("new etypeId=" + etypeId);
+        }
+        var etype = {
+            _id: etypeId,
+            name: s.etypeName,
+            nameLC: s.etypeName.toLowerCase(),
+            updated: new Date(),
+            creator: Meteor.userId()
         };
+        var existingEtype = Etypes.findOne(etypeId);
+        if (!existingEtype) {
+            Etypes.insert(etype);
+        }
 
         //Import Col Mappings
-        for (var ci in s.columnMappings) {
-            var columnMapping = s.columnMappings[ri];
+        for (var ci in s.headerMappings) {
+            var headerMapping = s.headerMappings[ri];
+            if (! headerMapping) {
+                console.log("No header mapping for column index=" + ci);
+                continue;
+            }
             var pred;
-            if (! columnMapping.entity) {
-                //this row has no entity.  continue;
+            if (! headerMapping.pred) {
+                //this row has no predicate.  continue;
                 //TODO in the future, require mappings to be specified
                 pred = {
-                    _id: new Meteor.Collection.ObjectID(),
-                    name: columnMapping.name,
-                    nameLC: columnMapping.name.toLowerCase(),
+                    _id: new Meteor.Collection.ObjectID()._str,
+                    name: headerMapping.name,
+                    nameLC: headerMapping.name.toLowerCase(),
                     updated: new Date(),
                     creator: Meteor.userId()
                 };
-                Predicates.save(pred);
-                columnMapping.entity = pred._id;
+                Predicates.insert(pred);
+                headerMapping.pred = pred._id;
             } else {
-                pred = Predicates.findOne(columnMapping.pred);
+                pred = Predicates.findOne(headerMapping.pred);
                 if (! pred) {
                     pred = {
-                        _id: columnMapping.entity,
-                        name: columnMapping.name,
-                        nameLC: columnMapping.name.toLowerCase(),
+                        _id: headerMapping.pred,
+                        name: headerMapping.text,
+                        nameLC: headerMapping.text.toLowerCase(),
                         updated: new Date(),
                         creator: Meteor.userId()
                     };
-                    Predicates.save(pred);
+                    Predicates.insert(pred);
+//                    headerMapping.pred = pred._id;
                 }
+                //TODO populate pred.lastUsed
             }
 
-            //TODO only store if such a mapping (this name to this entity) does not exist.
+            //TODO only store if such a mapping (this name to this predicate) does not exist.
             //store the mapping
-            columnMapping.mapType = "Entity";
-            columnMapping.created = new Date();
-            columnMapping.creator = Meteor.userId();
-            columnMapping.updated = new Date();
-            Mappings.save(columnMapping);
+            headerMapping.mapEtype = "Predicate";
+            headerMapping.created = new Date();
+            headerMapping.creator = Meteor.userId();
+            headerMapping.updated = new Date();
+            console.log("insert headerMapping #" + ci + ": " + JSON.stringify(headerMapping));
+            Mappings.insert(headerMapping);
         }
-
-
-
-
-
-
 
         //Import Row Mappings
         for (var ri in s.rowMappings) {
             var rowMapping = s.rowMappings[ri];
+            if (! rowMapping) {
+                console.log("No row mapping for row index=" + ri);
+                continue;
+            }
+            rowMapping.mapEtype = "Entity";
+            rowMapping.created = new Date();
+            rowMapping.creator = Meteor.userId();
+            rowMapping.updated = new Date();
+            rowMapping.textLC = rowMapping.text.toLowerCase();
             var subject;
             if (! rowMapping.entity) {
                 //this row has no entity.  continue;
                 //TODO in the future, require mappings to be specified
                 subject = {
-                    _id: new Meteor.Collection.ObjectID(),
-                    name: rowMapping.name,
-                    nameLC: rowMapping.name.toLowerCase(),
+                    _id: new Meteor.Collection.ObjectID()._str,
+                    name: rowMapping.text,
+                    nameLC: rowMapping.textLC,
                     updated: new Date(),
                     creator: Meteor.userId()
                 };
-                Entities.save(subject);
                 rowMapping.entity = subject._id;
+                Entities.insert(subject, function(err, newId) {
+                    rowMapping.entity = subject._id;
+
+                    //TODO only store if such a mapping (this name to this entity) does not exist.
+                    //store the mapping
+                    console.log("inserting rowMapping: " + JSON.stringify(rowMapping));
+                    Mappings.insert(rowMapping);
+                });
+
             } else {
                 subject = Entities.findOne(rowMapping.entity);
                 if (! subject) {
                     subject = {
                         _id: rowMapping.entity,
-                        name: rowMapping.name,
-                        nameLC: rowMapping.name.toLowerCase(),
+                        name: rowMapping.text,
+                        nameLC: rowMapping.text.toLowerCase(),
                         updated: new Date(),
                         creator: Meteor.userId()
                     };
-                    Entities.save(subject);
+                    Entities.insert(subject, function(err, newId) {
+                        //TODO only store if such a mapping (this name to this entity) does not exist.
+                        //store the mapping
+                        console.log("inserting rowMapping: " + JSON.stringify(rowMapping));
+                        Mappings.insert(rowMapping);
+                    });
                 }
             }
 
-            //TODO only store if such a mapping (this name to this entity) does not exist.
-            //store the mapping
-            rowMapping.mapType = "Entity";
-            rowMapping.created = new Date();
-            rowMapping.creator = Meteor.userId();
-            rowMapping.updated = new Date();
-            Mappings.save(rowMapping);
+
+        }
+
+        //Import data
+        for (var ri in s.rowMappings) { //for each row...
+            var rowMapping = s.rowMappings[ri];
+            var rowData = s.rowData[rowMapping.dataRowIndex];
+            console.log("rowData=" + rowData);
+            var subjectId = rowMapping.entity;
+            for (var hi in s.headerMappings) { //for each header, make a Fact and save it
+//                console.log(hi + ")rowData[hi]=" + rowData[hi]);
+                var headerMapping = s.headerMappings[hi];
+                console.log(hi + ") headerMappings[hi]=" + JSON.stringify(headerMapping));
+                var predId = headerMapping.pred;
+                var txt = rowMapping.text;
+                var sdf = (s.beginningOfTime) ? 1 : 0;
+                var edf = (s.eternity) ? 1 : 0;
+                var fact = {
+                    subj: subjectId,
+                    header: txt,
+                    pred: predId,
+                    etype: etypeId,
+                    text: rowData[hi],
+                    src: "importStrategyData",
+                    sdt: s.startDate,
+                    sdf: sdf,
+                    edt: s.endDate,
+                    edf: edf,
+                    updated: new Date(),
+                    creator: Meteor.userId()
+                };
+                console.log("Inserting fact: " + JSON.stringify(fact));
+                Facts.insert(fact);
+            }
         }
     }
 });

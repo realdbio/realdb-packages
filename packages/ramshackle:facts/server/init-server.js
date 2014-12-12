@@ -5,14 +5,14 @@ Meteor.publish("myEntities", function () {
     return Entities.find({ creator: this.userId });
 });
 
-Meteor.publish("myTypes", function () {
+Meteor.publish("myEtypes", function () {
     if (! this.userId) return;
-    return Types.find({ creator: this.userId });
+    return Etypes.find({ creator: this.userId });
 });
 
-Meteor.publish("typeQueue", function () {
+Meteor.publish("etypeQueue", function () {
     if (! this.userId) return;
-    return Types.find({ creator: this.userId, validity: {$lte: 0} });
+    return Etypes.find({ creator: this.userId, validity: {$lte: 0} });
 });
 
 Meteor.publish("entityQueue", function () {
@@ -31,7 +31,7 @@ Meteor.publish("predicateQueue", function () {
 });
 
 lookupHeaderMapping = function(info, callback) {
-    Mappings.find({textLC: info.textLC, mapType: "Predicate"}, function(err, result) {
+    Mappings.find({textLC: info.textLC, mapEtype: "Predicate"}, function(err, result) {
         if (err) {
             console.log("Error in lookupHeaderMapping: " + err);
             callback(err);
@@ -41,7 +41,7 @@ lookupHeaderMapping = function(info, callback) {
 };
 
 lookupRowMapping = function(info, callback) {
-    Mappings.find({textLC: info.textLC, mapType: "Entity"}, function(err, result) {
+    Mappings.find({textLC: info.textLC, mapEtype: "Entity"}, function(err, result) {
         if (err) {
             console.log("Error in lookupRowMapping: " + err);
             callback(err);

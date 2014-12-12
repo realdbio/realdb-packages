@@ -22,7 +22,6 @@ Package.onUse(function(api) {
         ['lib/schema.js',
             'lib/init.js',
             'lib/util.js',
-            'lib/methods.js',
             'lib/RealdbioImporter.js'],
         ['client', 'server']
     );
@@ -32,8 +31,8 @@ Package.onUse(function(api) {
             'client/init-client.js',
             'client/entity.html',
             'client/entity.js',
-            'client/type.html',
-            'client/type.js',
+            'client/etype.html',
+            'client/etype.js',
             'client/dataloader.html',
             'client/dataloader.js'],
         ['client']
@@ -41,7 +40,8 @@ Package.onUse(function(api) {
 
     api.addFiles(
         [
-            'server/init-server.js'
+            'server/init-server.js',
+            'server/methods.js',
         ],
         ['server']
     );

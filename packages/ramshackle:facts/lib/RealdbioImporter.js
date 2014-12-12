@@ -14,12 +14,12 @@ RealdbioImporter.prototype.import = function(data) {
     var entities = [];
     var facts = [];
 
-    var typeObjId = self.config.entityTypeId;
-    if (typeObjId == "newType") typeObjId = null;
-    if (! typeObjId) typeObjId = new Meteor.Collection.ObjectID();
-    var typeObj = {
-        _id: typeObjId,
-        name: self.config.entityTypeName
+    var etypeObjId = self.config.etypeId;
+    if (etypeObjId == "newEtype") etypeObjId = null;
+    if (! etypeObjId) etypeObjId = new Meteor.Collection.ObjectID()._str;
+    var etypeObj = {
+        _id: etypeObjId,
+        name: self.config.etypeName
     };
     for (var li in lines) {
         var line = lines[li].trim();
@@ -30,8 +30,8 @@ RealdbioImporter.prototype.import = function(data) {
         var entity = entities[li];
         if (! entity) {
             entity = {
-                _id: new Meteor.Collection.ObjectID(),
-                type: typeObj._id
+                _id: new Meteor.Collection.ObjectID()._str,
+                etype: etypeObj._id
             };
             entities.push(entity);
 
@@ -45,9 +45,9 @@ RealdbioImporter.prototype.import = function(data) {
         }
 
         for (var ci in cells) {
-//            var colType = self.config.dataColumns[ci].colType;
+//            var colEtype = self.config.dataColumns[ci].colEtype;
             var header = self.config.dataColumns[ci].header;
-//            if (colType=="ignore") continue;
+//            if (colEtype=="ignore") continue;
 
             var cell = cells[ci];
             if (!cell) continue;
@@ -59,13 +59,13 @@ RealdbioImporter.prototype.import = function(data) {
             if (ci==0) {
                 entity.title = cell;
                 entities[li] = entity;
-//            } else if (colType=="description" || colType=="synonym") {
+//            } else if (colEtype=="description" || colEtype=="synonym") {
 //                var description = entity.description || "";
 //                if (description && description.length > 0) description += "; ";
 //                description += cell;
 //                entity.description = description;
 //                entities[li] = entity;
-//            } else if (colType=="datum") {
+//            } else if (colEtype=="datum") {
             } else {
                 var numericVal = null;
                 if(isNumber(cell)) {
@@ -84,7 +84,7 @@ RealdbioImporter.prototype.import = function(data) {
     }
 
     var bulkData = {
-        types: [typeObj],
+        etypes: [etypeObj],
         entities: entities,
         facts: facts,
         strategies: [self.config]

@@ -1,4 +1,4 @@
-Template.formTypeInsert.events({'submit form': function (event, template) {
+Template.formEtypeInsert.events({'submit form': function (event, template) {
     event.preventDefault();
     if (Meteor.user() == null || Meteor.user()._id == null) {
         return;
@@ -11,30 +11,30 @@ Template.formTypeInsert.events({'submit form': function (event, template) {
         creator: Meteor.user()._id
     };
     var validationError = false;
-    if (! Types.simpleSchema().namedContext().validateOne(obj, "description")) {
+    if (! Etypes.simpleSchema().namedContext().validateOne(obj, "description")) {
         Session.set("error-readlbio-entity-name", "Please enter a name");
         validationError = true;
     }
     if (validationError) return;
-    Meteor.call("addType", obj, function(error, result) {
+    Meteor.call("addEtype", obj, function(error, result) {
         // display the error to the user and abort
         if (error)
             return alert(error.reason);
-        console.log("addType returns: " + result);
+        console.log("addEtype returns: " + result);
     });
 }});
 
 
-Template.listMyTypes.helpers({
-    types: function(){
-        return Types.find().fetch();
+Template.listMyEtypes.helpers({
+    etypes: function(){
+        return Etypes.find().fetch();
     }
 });
 
-//Template.typeButton.helpers({
-//    getIconForType: function(event) {
-//        console.log("getIconForType: selectedTypeId=" + selectedTypeId);
-//        if (selectedTypeId == "typeButton-" + this._id) return "checked";
+//Template.etypeButton.helpers({
+//    getIconForEtype: function(event) {
+//        console.log("getIconForEtype: selectedEtypeId=" + selectedEtypeId);
+//        if (selectedEtypeId == "etypeButton-" + this._id) return "checked";
 //        return "unchecked"
 //    }
 //});
